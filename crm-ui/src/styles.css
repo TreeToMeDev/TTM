@@ -1,0 +1,382 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+/*
+ * general purpose settings
+ */
+
+ :root {
+	--border-radius: 1vw;
+	--font-size: 15px;
+	--h-gap: 1vw;
+	--v-gap: 1vh;
+ }
+
+html, body {
+	height: 100%;
+}
+
+body {
+	background: rgb(237,240,244);
+	font-family: 'Lato';
+  	font-size: 27px;
+	font-style: normal;
+	margin: 0;
+}
+
+.link-style {
+	cursor: pointer;
+}
+
+.router-outlet {
+	height: calc(100% - 8vh); /* eyeballed estimate to give good bottom-margin without scrolling */
+}
+
+.overdue-text {
+	color: red;
+	font-weight: 900;
+}
+
+A:link { COLOR: black; TEXT-DECORATION: none; font-weight: 300 }
+td > A:visited { COLOR: black; TEXT-DECORATION: none; font-weight: 300 }
+A:hover { COLOR: rgb(80,140,233); TEXT-DECORATION: none; font-weight: none }
+td > A:hover:visited { COLOR: rgb(80,140,233); TEXT-DECORATION: none; font-weight: none }
+
+.app-logo {
+	height: auto;
+	width: 8vw;
+    padding-top: 0.6em;
+    padding-right: 1em;
+}
+
+mat-label, mat-select, input {
+	font-size: var(--font-size); 
+}
+
+/* 
+ * These entries are listed in approximate order of the structure of the app, which is:
+ *
+ * - Syker header (the black thing) (has its own CSS file, not listed here)
+ * - toolbar:  typically has a title and a couple of buttons
+ * - list container: holds the filter form and main list
+ * - filter form: to enter filter criteria for the list which follows
+ * - main list: of records such as Accounts or Contact
+ * - detail view: accessed by clicking on an entry in the above list
+ * - panels: wihin the detail view there is sometimes a collection of panels for different types of content
+ * - sub lists: some panels have secondary lists inside them; uses same CSS as main list
+ * - edit view: accessed by clicking an 'Edit' button (or 'New' button from the main list)
+ */
+
+/*
+ * toolbar (right below the Syker header)
+ */
+
+.toolbar-header {
+    font-size: 28px;
+}
+
+/* goes between stuff aligned left and stuff aligned right */
+.flex-expand {
+	flex: 1 1 auto;
+}
+
+mat-toolbar.sub-toolbar {
+	background: white;
+}
+
+/*
+ * list container (holds filter fields and the list itself)
+ */
+
+ .content-card.mat-card {
+	border-radius: var(--border-radius);
+	margin-bottom: 0vh;
+	margin-left: var(--h-gap);
+    margin-right: var(--h-gap);
+	margin-top: 2vh;
+	min-height: calc(100% - 11.5vh); /* eyeballed to give a nice bottom margin but not cause scrolling */
+    padding: 0;
+}
+
+/* 
+ * filter form (for entering search criteria for the main record list)
+ */
+
+.filter-form {
+	font-size: var(--font-size);
+	padding-bottom: var(--v-gap);
+	padding-left: var(--h-gap);
+	padding-top: var(--v-gap);
+	display: flex; 
+	justify-content: space-between;
+}
+
+.filter-form mat-form-field {
+	padding-right: var(--h-gap);
+}
+
+/* Makes the filter inputs slightly shorter and nicer looking */
+mat-form-field.mat-filter-field-input {
+	font-size: 12px;
+}
+
+ /*
+  * main list (of the basic entities such as Accounts and Contacts)
+  * these classes are also used for sub lists, which appear inside detail components
+  */
+ 
+.list-table {
+	padding: 0;
+	width: 100%;
+}
+
+/* so border-radius from content-card comes thru when there is no filter form eg. Users */
+table.list-table{
+	background-color: transparent;
+}
+
+.list-table th {
+	color: rgb(49,57,73);
+	font-size: var(--font-size);
+	font-weight: 400;
+ }
+
+ .list-table th.mat-header-cell {
+	border-bottom: 2px solid rgb(217,226,236);
+	padding-bottom: 1.7vh;
+	padding-top: 2vh;
+ }
+ 
+ .list-table-with-filters th.mat-header-cell {
+	border-top: 1px solid lightgray;
+ }
+ 
+ .list-table td.mat-cell {
+	font-size: 16px;
+	font-weight: 300;
+	padding-right: 2vw;
+ }
+ 
+.list-table tr.mat-header-row {
+	height: 6vh;
+}
+
+.truncate-cell-text {
+	max-width: 15vw;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* Only used in sub-lists (lists appearing inside a container such as account-detail), for when the list is empty */
+.no-records {
+	margin-left: 2vw;
+	margin-bottom: 2vh
+}
+
+/*
+ * detail view (of a record from the main list)
+ */
+
+/* The thing that shows the title and some buttons */
+.sub-title {
+	font-size: 20px;
+	margin-bottom: 2vh;
+}
+
+.sub-sub-title {
+	font-size: 18px;
+	padding-top: 1em;
+	padding-left: 1em;
+	margin-bottom: .3em;
+}
+
+/* The table that holds the individual fields of the detail form */
+
+/* The title cells */
+.detail-table > tr > td:first-child, .detail-table > tr > td:nth-child(3), .detail-table > tr > td:nth-child(5) {
+    color: grey;
+    font-size: var(--font-size);
+    padding-left: 5vw;
+    padding-right: 2vw;
+	vertical-align: top;
+	width: 10vw;
+}
+
+/* the data cells */
+.detail-table > tr > td:nth-child(2), .detail-table > tr > td:nth-child(4), .detail-table > tr > td:nth-child(6) {
+    color: black;
+    font-size: var(--font-size);
+	width: 10vw;
+	vertical-align: top;
+}
+
+/*
+ * panels (of data inside a detail component)
+ */
+
+/* For individual panels within a detail component */
+.panel-title {
+	font-size: 18px;
+	font-weight: 500;
+}
+
+/* for detail components with multiple sets of fields inside a panel, currently only account-view */
+.vertical-spacer {
+	height: 4vh;
+}
+
+/* For spacing between panels eg. inside the account-detail, to separate the various 'sub-list' components */
+.accordion-spacer {
+	margin-top: 2vh;
+}
+
+/* needed to get sub-list list-table to expand to full width inside Accordion */
+div.mat-expansion-panel-body {
+	padding: 0px;
+	margin: 0px;
+}
+
+/* More characteristics of the panels within eg. account-detail */
+mat-expansion-panel.mat-expansion-panel.expansion-panel.ng-star-inserted {
+	border-radius: var(--border-radius);
+	background: white;
+	margin-top: 2vh;
+	margin-left: 1vw;
+	margin-right: 1vw;
+}
+
+/* only affects the first panel inside account-detail */
+mat-card.form-card {
+	border-radius: 1vw;
+	margin-left: var(--h-gap);
+	margin-right: var(--h-gap);
+	margin-top: 2vh;
+}
+
+/* for panels that do NOT contain a sub-list */
+.content-accordion {
+	padding-bottom: 2vh;
+}
+
+/* so list header doesn't look so loose; doesn't affect non-list panels (I guess) */
+.mat-expansion-panel-header.mat-expanded.panel-header {
+	/* leave these in PX for now; NG defines these as 64,0 ... */
+	height: 30px;
+	padding-top: 10px;
+}
+
+/* Hack to get the mini-table used to display Last Change to be wider than normal */
+.wide {
+	min-width: 50vw;
+}
+
+/*
+ * edit view (like detail, but allows updates)
+ */
+
+.edit-form {
+	font-size: var(--font-size); /* controls overall size of <input>, not just the font */
+}
+
+/* Make gap between fields narrower than the default */
+div.mat-form-field-wrapper {
+	padding-bottom: 0px;
+}
+
+/* Affects size of all non-picker inputs in edit components */
+mat-form-field.mat-form-field-input {
+	font-size: var(--font-size);
+	width: 25vw;
+}
+
+/* Affects size of all non-picker inputs in edit components - Larger size */
+mat-form-field.mat-form-field-input-large {
+	font-size: var(--font-size);
+	width: 30vw;
+}
+
+/* Affects size of all non-picker inputs in edit components */
+mat-form-field.mat-form-field-input-2 {
+	font-size: var(--font-size);
+	width: 100%;
+}
+
+.server-error {
+	color:red;
+	font-size: var(--font-size);
+}
+
+/* checkboxes that live beside inputs inside edit forms */
+mat-checkbox.table-checkbox {
+	font-size: var(--font-size);
+	/* TODO: this is eyeballed, hoping to be similar to Material indentation of input text
+	   I looked in CSS Inspector and don't understand how Material does it, so this is a guess for now */
+	padding-left: .8vw;
+}
+
+/* 
+ * special overrides for buttons
+ */
+ 
+button.right-space {
+	margin-right: 2vw;
+}
+
+/* Buttons on main list pages, to right of filter controls */
+button.button-space {
+	margin-left: 0vw;
+	margin-right: 2vw;
+	vertical-align: top;
+	margin-top: 1.7vh;
+}
+
+/* Checkboxes on main list pages, to right of filter controls (same as Button
+   except bigger margin-top) */
+mat-checkbox.checkbox-space {
+	margin-left: 0vw;
+	margin-right: 2vw;
+	vertical-align: top;
+	margin-top: 3.6vh;
+}
+
+/* as above for for checkbox */
+mat-checkbox.button-space {
+	margin-left: 0vw;
+	margin-right: 2vw;
+	margin-top: 2.2vh;
+	vertical-align: top;
+}
+
+/* Other special cases */
+
+/* make text area for notes big! */
+.big-text-area {
+	height: 50vh;
+}
+
+.attachment-upload {
+	display: none;
+}
+
+/******** Dashboard Styles **************/
+mat-card.dashboard-card {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+	display: flex;
+    flex-direction: column;
+}
+ 
+ 
+mat-card-content.dashboard-card-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    align-items: stretch;
+    overflow: auto;
+}
+
+/**** End Dashboard Styles *************/

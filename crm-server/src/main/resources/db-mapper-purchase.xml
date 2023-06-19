@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='com.ttm.crm.server'>
+
+	<select id='selectPurchases' parameterType='integer' resultType='com.ttm.crm.server.entity.Purchase'>
+        SELECT * from purchase
+        	WHERE account_id = #{accountId}
+        	ORDER BY product_code, purchase_date, serial_no, id
+    </select>
+
+	<select id='selectPurchase' parameterType='integer' resultType='com.ttm.crm.server.entity.Purchase'>
+        SELECT * from purchase WHERE id = #{id}
+    </select>
+
+    <insert id='insertPurchase' parameterType='com.ttm.crm.server.entity.Purchase'>
+        INSERT INTO purchase
+        	(account_id, purchase_date, product_code, serial_no, warranty_end_date)
+        VALUES (#{accountId}, #{purchaseDate}, #{productCode}, #{serialNo}, #{warrantyEndDate})
+    </insert>
+
+    <update id='updatePurchase' parameterType='com.ttm.crm.server.entity.Purchase'>
+        UPDATE purchase
+        	SET account_id = #{accountId},
+        		product_code = #{productCode}, 
+        		purchase_date = #{purchaseDate}, 
+        		serial_no = #{serialNo}, 
+        		warranty_end_date = #{warrantyEndDate}
+        	WHERE id = #{id}
+    </update>
+
+    <delete id='deletePurchase' parameterType='int'>
+        DELETE FROM purchase 
+        	WHERE id = #{id}
+    </delete>
+        
+</mapper>

@@ -1,0 +1,1 @@
+ALTER TABLE account ADD COLUMN shipping_address_same_as_billing BOOLEAN NOT NULL DEFAULT FALSE;

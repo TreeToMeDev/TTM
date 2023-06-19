@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='com.ttm.crm.server'>
+
+    <select id='selectContactTypeListItem' parameterType='string' resultType='com.ttm.crm.server.entity.ContactTypeList'>
+    	SELECT * 
+    		FROM contact_type_list
+    		WHERE description = #{description}
+    </select>
+
+	<select id='selectAllContactTypeList' resultType='com.ttm.crm.server.entity.ContactTypeList'>
+    	SELECT *
+    		FROM contact_type_list
+    		ORDER BY description
+    </select>
+    
+    <insert id='insertContactTypeListItem' parameterType='com.ttm.crm.server.entity.ContactTypeList'>    
+    	INSERT INTO contact_type_list(
+    		description
+  		) VALUES (
+  			#{description}
+   		)
+    </insert>
+
+        <select id='deleteContactTypeListItem' parameterType='string'>
+    	DELETE FROM contact_type_list WHERE description = #{description};
+    </select> 
+    
+</mapper>
+    

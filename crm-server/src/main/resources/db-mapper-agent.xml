@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='com.ttm.crm.server'>
+	
+	<select id='selectAgentsFiltered' parameterType="integer" resultType='com.ttm.crm.server.entity.Agent'>
+    	SELECT * FROM app_user
+    		WHERE id IN (SELECT get_accessible_ids(#{agentId}))
+    		  AND parent_id != -1
+    </select>
+
+	<select id='selectAgentsAll' parameterType="integer" resultType='com.ttm.crm.server.entity.Agent'>
+    	SELECT * FROM app_user
+    </select>
+    
+    <!--  TODO: should this have user-agent filtering applied?? -->
+	<select id='selectAgent' parameterType='integer' resultType='com.ttm.crm.server.entity.Agent'>
+    	SELECT t1.*,
+    		t2.first_name || ' ' || t2.last_name AS parent_user_name
+    		FROM app_user t1 
+    		LEFT JOIN app_user t2 ON t2.id = t1.parent_id
+    		WHERE t1.id = #{id} AND t1.parent_id != -1
+    </select>
+    
+    <!--  TODO: hacky, so can get parentID even if its -1 -->
+    <select id='selectAgentUser' parameterType='integer' resultType='com.ttm.crm.server.entity.Agent'>
+    	SELECT t1.*,
+    		t2.first_name || ' ' || t2.last_name AS parent_user_name
+    		FROM app_user t1 
+    		LEFT JOIN app_user t2 ON t2.id = t1.parent_id
+    		WHERE t1.id = #{id}
+    </select>
+	
+    <insert id='insertAgent' keyColumn='id' keyProperty='id' parameterType='com.ttm.crm.server.entity.Agent' useGeneratedKeys='true'>    
+    	INSERT INTO app_user(access_users, auth0_id, email, first_name, last_name, parent_id) 
+    		VALUES ( false, #{auth0Id}, #{email}, #{firstName}, #{lastName}, #{parentId} )
+    </insert>
+    
+	<update id='updateAgent' parameterType='com.ttm.crm.server.entity.Agent'>
+    	UPDATE app_user SET 
+    		email = #{email},
+    		first_name = #{firstName},
+    		last_name = #{lastName},
+    		parent_id = #{parentId}
+    		WHERE id = #{id}
+    </update>
+
+	<delete id='deleteAgent' parameterType='integer'>
+    	DELETE FROM app_user WHERE id = #{id} AND parent_id != -1
+    </delete>
+    
+</mapper>

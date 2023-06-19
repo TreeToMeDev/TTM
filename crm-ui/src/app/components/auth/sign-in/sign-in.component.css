@@ -1,0 +1,15 @@
+.login-main-div {
+    align-items: center;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    text-align: center;
+}
+
+.login-logo {
+    display: block;
+	height: auto;
+    margin: 0 auto;
+    padding: 5vh;
+	width: 20vw;
+}

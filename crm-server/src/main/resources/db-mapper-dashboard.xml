@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='com.ttm.crm.server'>
+
+    <select id='selectDashboardOpenTasks' parameterType="integer" resultType='com.ttm.crm.server.entity.Task'>
+   		SELECT task.contact_id,
+   			   task.description,
+   		       task.due_date,
+   		       task.id,
+   		       task.status, 
+    		   contact.first_name || ' ' || contact.last_name AS contact_name
+    		FROM task
+    		LEFT JOIN app_user ON app_user.id = task.agent_id
+    		LEFT JOIN contact ON contact.id = task.contact_id
+    		WHERE task.agent_id = #{agentId} 
+    		  AND task.status != 'COMPLETE'
+    		  AND task.due_date &lt; now() + interval '7' day
+    		ORDER BY task.due_date
+    </select>
+    
+    <select id='selectDashboardNewLeads' parameterType="integer" resultType='com.ttm.crm.server.entity.Contact'>
+		<!--  TODO: maybe better to concat the user name in Java -->
+		SELECT contact.account_id,
+			   contact.first_name,
+			   contact.id,
+			   contact.last_name,
+			   contact.phone,
+			   contact.email,
+			   account.name AS account_name
+		FROM contact
+		LEFT JOIN account ON account.id = contact.account_id
+		LEFT JOIN app_user ON app_user.id = contact.agent_id
+		JOIN history ON history.contact_id = contact.id
+							AND history.action = 'ADD'
+							AND history.table_name = 'Contact'
+		WHERE contact.agent_id = #{agentId}
+		  AND history.timestamp &gt; now() - interval '7' day
+		ORDER BY history.timestamp
+    </select>
+    
+    <select id='selectDashboardAccountTypeTotals' parameterType="integer" resultType='com.ttm.crm.server.entity.dashboard.AccountTypeTotal'>
+	    SELECT account_type, COUNT(*) AS total
+		FROM account
+		LEFT JOIN app_user ON app_user.id = account.agent_id
+		WHERE account.agent_id = #{agentId}
+		GROUP BY account_type
+    </select> 
+    
+    <select id='selectDashboardAccountCountryTotals' parameterType="integer" resultType='com.ttm.crm.server.entity.dashboard.AccountCountryTotal'>
+	    SELECT billing_country AS country, COUNT(*) AS total
+		FROM account
+		LEFT JOIN app_user ON app_user.id = account.agent_id
+		WHERE account.agent_id = #{agentId}
+		GROUP BY billing_country
+    </select> 
+    
+</mapper>

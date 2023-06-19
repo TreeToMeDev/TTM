@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='com.ttm.crm.server'>
+    
+	<select id='selectDealItemsByDealId' resultType='com.ttm.crm.server.entity.DealItem'>
+   		SELECT 
+   			deal_item.*, 
+   			p.description AS product_description,
+   			p.product_code,
+   			ac.description AS product_measurement,
+   			measurement_amount AS product_measurement_amount
+   			FROM deal_item
+   			INNER JOIN product p ON p.id = deal_item.product_id
+   			LEFT JOIN app_config ac ON (ac.category = 'PRODUCT.MEASUREMENT' AND ac.config_option = p.measurement)
+   			WHERE deal_item.deal_id = #{dealId}
+   			ORDER BY id
+    </select>
+    
+    <select id='selectDealItem' resultType='com.ttm.crm.server.entity.DealItem'>
+   		SELECT 
+   			deal_item.*, 
+   			p.description AS product_description,
+   			p.product_code,
+   			ac.description AS product_measurement,
+   			measurement_amount AS product_measurement_amount
+   			FROM deal_item
+   			INNER JOIN product p ON p.id = deal_item.product_id
+   			LEFT JOIN app_config ac ON (ac.category = 'PRODUCT.MEASUREMENT' AND ac.config_option = p.measurement)
+   			WHERE deal_item.id = #{id}
+    </select>
+
+    <insert id='insertDealItem' parameterType='com.ttm.crm.server.entity.DealItem'  useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO deal_item
+        	(deal_id,
+        	 price,
+        	 product_id,
+        	 quantity)
+        VALUES 
+        	(#{dealId},
+        	 #{price},
+        	 #{productId},
+        	 #{quantity})
+    </insert>
+    
+    <insert id='updateDealItem' parameterType='com.ttm.crm.server.entity.DealItem'>
+        UPDATE deal_item SET
+        	price = #{price},
+        	product_id = ${productId},
+        	quantity = #{quantity}
+       		WHERE id = #{id}
+    </insert>
+
+    <delete id='deleteDealItem' parameterType='integer'>
+        DELETE FROM deal_item WHERE id = #{id}
+    </delete>
+    
+</mapper>

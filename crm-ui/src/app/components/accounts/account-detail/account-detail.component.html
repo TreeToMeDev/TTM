@@ -1,0 +1,133 @@
+<!-- TODO: THESE SHOULD BE SEPARATE COMPONENTS NOT ALL MUSHED INTO THE ONE FILE -->
+
+<mat-toolbar *ngIf="account !=undefined">
+    <mat-toolbar-row>
+        <span class="toolbar-header">
+            {{account.name}}
+        </span>
+        <span class="toolbar-header"></span>
+        <span class="flex-expand"></span>
+        <span flex></span>
+        <button class="right-space" routerLink="edit" mat-raised-button color="primary">Edit</button>
+        <button class="right-space" routerLink="duplicate" mat-raised-button color="primary">Duplicate</button>
+        <button mat-raised-button color="warn" (click)="openDialog('0ms', '0ms')">
+            Delete    
+        </button>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-accordion class="first-panel" multi [togglePosition]="'before'" *ngIf="account !=undefined">
+    <div class="accordion-spacer">
+        <mat-expansion-panel [expanded]="true" class="expansion-panel content-accordion">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="panel-title">
+                    Account Information
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <table class="detail-table">
+                <tr>
+                    <td>Industry</td>
+                    <td>{{account.industry | enumMap: industries }}</td>
+                </tr>
+                <tr>
+                    <td>Web Site</td>
+                    <td>{{account.webSite}}</td>
+                </tr>
+                <tr>
+                    <td>Phone</td>
+                    <td>{{account.phone}}</td>
+                </tr>
+            </table>
+        </mat-expansion-panel>
+    </div>
+</mat-accordion>
+
+<mat-accordion multi [togglePosition]="'before'" *ngIf="account !=undefined">
+    <div class="accordion-spacer">
+        <mat-expansion-panel [expanded]="true" class="expansion-panel content-accordion">
+            <mat-expansion-panel-header class="panel-header">
+                <mat-panel-title class="panel-title">
+                    Details
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <table class="detail-table">
+                <tr>
+                    <td>Name</td>
+                    <td>{{account.name}}</td>
+                    <td>Industry</td>
+                    <td>{{account.industry | enumMap: industries }}</td>
+                </tr>
+                <tr>
+                    <td>Account Type</td>
+                    <td>{{account.accountType}}</td>
+                    <td>Agent</td>
+                    <td>{{account.agentName}}</td>
+                </tr>
+                <tr>
+                    <td>Web Site</td>
+                    <td (click)="goToUrl(account.webSite)">{{account.webSite}}</td>
+                    <td>Currency</td>
+                    <td>{{account.currencyDescription}}</td>
+                </tr>
+                <tr>
+                    <td>Phone</td>
+                    <td>{{account.phone}}</td>
+                </tr>
+            </table>
+            <div class="vertical-spacer"></div>
+            <table class="detail-table">
+                <tr>
+                    <td> </td>
+                    <td> </td>
+                    <td>
+                        <mat-checkbox color="primary" labelPosition="before" (click)="$event.preventDefault()" [(ngModel)]="account.shippingAddressSameAsBilling">Shipping same as Billing?</mat-checkbox>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Billing Street</td>
+                    <td>{{account.billingStreet}}</td>
+                    <td>Shipping Street</td>
+                    <td>{{account.shippingStreet}}</td>
+                </tr>
+                <tr>
+                    <td>Billing City</td>
+                    <td>{{account.billingCity}}</td>
+                    <td>Shipping City</td>
+                    <td>{{account.shippingCity}}</td>
+                </tr>
+                <tr>
+                    <td>Billing Province/State</td>
+                    <td>{{account.billingProvinceState}}</td>
+                    <td>Shipping Province/State</td>
+                    <td>{{account.shippingProvinceState}}</td>
+                </tr>
+                <tr>
+                    <td>Billing Country</td>
+                    <td>{{account.billingCountry}}</td>
+                    <td>Shipping Country</td>
+                    <td>{{account.shippingCountry}}</td>
+                </tr>
+                <tr>
+                    <td>Billing Postal Code</td>
+                    <td>{{account.billingPostalCode}}</td>
+                    <td>Shipping PostalCode</td>
+                    <td>{{account.shippingPostalCode}}</td>
+                </tr>
+            </table>
+        </mat-expansion-panel>
+    </div>
+</mat-accordion>
+
+<app-note-sub-list [accountId]=id></app-note-sub-list>
+
+<app-contact-sub-list [accountId]=id></app-contact-sub-list>
+
+<app-purchase-sub-list [accountId]=id></app-purchase-sub-list>
+
+<app-task-sub-list [accountId]=id></app-task-sub-list>
+
+<app-attachment-sub-list [accountId]=id></app-attachment-sub-list>
+
+<app-deal-sub-list [accountId]=id></app-deal-sub-list>
+
+<app-history-sub-list [accountId]=id></app-history-sub-list>

@@ -1,0 +1,92 @@
+<form class="standard-form" *ngIf="referral" (ngSubmit)="onSubmit()">
+    <mat-toolbar>
+        <mat-toolbar-row>
+            <!-- TODO the ternary is a weird way to avoid a null, look into this -->
+            <span class="toolbar-header">{{referral ? referral.firstName : ""}} {{referral ? referral.lastName : ""}} - Convert to Contact?</span>
+            <span class="flex-expand"></span>
+            <span flex></span>
+            <button class="right-space" mat-raised-button color="primary">
+                Convert
+            </button>
+            <button type="button" mat-raised-button color="primary" (click)="onCancel()">
+                Cancel    
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <mat-card class="form-card">
+
+        <div class="sub-title">
+            Referral Information
+        </div>
+
+        <table class="detail-table">
+            <tr>
+                <td>First Name</td>
+                <td>{{ referral.firstName }}</td>
+                <td>Last Name</td>
+                <td>{{ referral.lastName }}</td>
+            </tr>
+            <tr>
+                <td>Company Name</td>
+                <td>{{ referral.companyName }}</td>
+                <td>Job Title</td>
+                <td>{{ referral.jobTitle }}</td>
+            </tr>
+            <tr>
+                <td>Email Address</td>
+                <td>{{ referral.email }}</td>
+                <td>Phone</td>
+                <td>{{ referral.phone }}</td>
+            </tr>
+        </table>
+    </mat-card>
+
+    <mat-card class="form-card">
+
+        <div class="sub-title">
+            New Contact Details
+        </div>
+
+        <table class="detail-table">
+            <tr>
+                <td>First Name</td>
+                <td>{{ referral.firstName }}</td>
+                <td>Last Name</td>
+                <td>{{ referral.lastName }}</td>
+            </tr>
+            <tr>
+                <td>Account Name</td>
+                <td>{{ referral.companyName }}</td>
+                <td>Title</td>
+                <td>{{ referral.jobTitle }}</td>
+            </tr>
+            <tr>
+                <td>Email Address</td>
+                <td>{{ referral.email }}</td>
+                <td>Phone</td>
+                <td>{{ referral.phone }}</td>
+            </tr>
+            <tr>
+                <td>Owner</td>
+                <td>{{ userName }}</td>
+            </tr>
+        </table>
+
+        <hr>
+        
+        <div class="sub-title">
+            New Account Details
+        </div>
+
+        <table class="detail-table">
+            <tr>
+                <td>Account Name</td>
+                <td>{{ referral.companyName }}</td>
+                <td>Owner</td>
+                <td>{{ userName }}</td>
+            </tr>
+        </table>
+    </mat-card>
+
+</form>

@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='com.ttm.crm.server'>
+
+    <select id='selectDeals' parameterType="integer" resultType='com.ttm.crm.server.entity.Deal'>
+   		SELECT deal.*,
+    		account.name AS account_name, 
+    		contact.first_name || ' ' || contact.last_name AS contact_name,
+    		app_user.first_name || ' ' || app_user.last_name AS agent_name
+    		FROM deal
+    		LEFT JOIN account ON account.id = deal.account_id
+    		LEFT JOIN app_user ON app_user.id = deal.agent_id
+    		LEFT JOIN contact ON contact.id = deal.contact_id
+    		WHERE deal.agent_id IN (SELECT get_accessible_ids(#{agentId}))
+    		ORDER BY due_date
+    </select>
+    
+    <select id='selectOpenDeals' parameterType="integer" resultType='com.ttm.crm.server.entity.Deal'>
+   		SELECT deal.*,
+    		account.name AS account_name, 
+    		contact.first_name || ' ' || contact.last_name AS contact_name,
+    		app_user.first_name || ' ' || app_user.last_name AS agent_name
+    		FROM deal
+    		LEFT JOIN account ON account.id = deal.account_id
+    		LEFT JOIN app_user ON app_user.id = deal.agent_id
+    		LEFT JOIN contact ON contact.id = deal.contact_id
+    		WHERE deal.agent_id IN (SELECT get_accessible_ids(#{agentId}))
+    		  <!--  values hardcoded in frontend deal-stages.enum.ts -->
+    		  <!--  TODO should come from back end -->
+    		  AND deal.stage != 'CLOSED_WON'
+    		  AND deal.stage != 'CLOSED_LOST'
+    		ORDER BY due_date
+    </select>
+
+    <select id='selectAccountOpenDeals' resultType='com.ttm.crm.server.entity.Deal'>
+   		SELECT deal.*,
+    		account.name AS account_name, 
+    		contact.first_name || ' ' || contact.last_name AS contact_name,
+    		app_user.first_name || ' ' || app_user.last_name AS agent_name
+    		FROM deal
+    		LEFT JOIN account ON account.id = deal.account_id
+    		LEFT JOIN app_user ON app_user.id = deal.agent_id
+    		LEFT JOIN contact ON contact.id = deal.contact_id
+    		WHERE deal.account_id = #{accountId}
+    		ORDER BY due_date
+    </select>
+
+    <select id='selectContactOpenDeals' resultType='com.ttm.crm.server.entity.Deal'>
+   		SELECT deal.*,
+    		account.name AS account_name, 
+    		contact.first_name || ' ' || contact.last_name AS contact_name,
+    		app_user.first_name || ' ' || app_user.last_name AS agent_name
+    		FROM deal
+    		LEFT JOIN account ON account.id = deal.account_id
+    		LEFT JOIN app_user ON app_user.id = deal.agent_id
+    		LEFT JOIN contact ON contact.id = deal.contact_id
+    		WHERE deal.contact_id = #{contactId}
+    		ORDER BY due_date
+    </select>
+    
+	<select id='selectDeal' resultType='com.ttm.crm.server.entity.Deal'>
+    	SELECT deal.*,
+    		account.name AS account_name, 
+    		contact.first_name || ' ' || contact.last_name AS contact_name,
+    		app_user.first_name || ' ' || app_user.last_name AS agent_name
+    		FROM deal
+    		LEFT JOIN account ON account.id = deal.account_id
+    		LEFT JOIN app_user ON app_user.id = deal.agent_id
+    		LEFT JOIN contact ON contact.id = deal.contact_id
+    		WHERE deal.id = #{id}
+    </select>
+
+    <insert id='insertDeal' parameterType='com.ttm.crm.server.entity.Deal'  useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO deal
+        	(account_id,
+        	 contact_id,
+        	 due_date,
+        	 name,
+        	 agent_id,
+        	 stage)
+        VALUES 
+        	(#{accountId},
+        	 #{contactId},
+        	 #{dueDate},
+        	 #{name},
+        	 #{agentId},
+        	 #{stage})
+    </insert>
+
+    <select id='updateDeal' resultType='com.ttm.crm.server.entity.Deal'>
+    	UPDATE deal SET
+    		account_id = #{accountId},
+    		contact_id = #{contactId},
+    		name = #{name},
+    		agent_id = #{agentId},
+    		stage = #{stage}
+    		WHERE id = #{id}
+    </select>
+
+    <delete id='deleteDeal' parameterType='integer'>
+        DELETE FROM deal WHERE id = #{id}
+    </delete>
+    
+</mapper>

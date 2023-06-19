@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='com.ttm.crm.server'>
+
+	<resultMap id='contactMap' type='com.ttm.crm.server.entity.Contact'>
+        <result property='id' column='id'/>        
+        <collection property='contactTypes' column='id' ofType='com.ttm.crm.server.entity.ContactType' select='selectContactTypesByContact'/>
+    </resultMap>
+    
+	<select id='selectAllContacts' parameterType="integer" resultType='com.ttm.crm.server.entity.Contact'>
+		<!--  TODO: maybe better to concat the user name in Java -->
+		SELECT contact.*, 
+       		account.billing_city AS account_city,
+	    	account.billing_country AS account_country,
+	    	account.industry AS account_industry,
+	    	account.name AS account_name,
+	    	account.phone AS account_phone,
+	    	account.web_site AS account_web_site, 
+        	app_user.first_name || ' ' || app_user.last_name AS agent_name FROM contact
+        	LEFT JOIN account ON account.id = contact.account_id
+        	LEFT JOIN app_user ON app_user.id = contact.agent_id
+        	WHERE contact.agent_id IN (SELECT get_accessible_ids(#{agentId}))
+        	ORDER BY contact.first_name
+    </select>
+    
+	<select id='selectContactsByAccountId' parameterType='integer' resultType='com.ttm.crm.server.entity.Contact'>
+	    SELECT contact.*, 
+       		account.billing_city AS account_city,
+	    	account.billing_country AS account_country,
+	    	account.industry AS account_industry,
+	    	account.name AS account_name,
+	    	account.phone AS account_phone,
+	    	account.web_site AS account_web_site
+	    	FROM contact
+        	LEFT JOIN account ON account.id = contact.account_id
+        	WHERE account_id = #{accountId}
+        	ORDER BY contact.id
+	</select>
+
+	<select id='selectContact' parameterType='integer' resultMap='contactMap'> 
+        SELECT contact.*,
+       		account.billing_city AS account_city,
+	    	account.billing_country AS account_country,
+	    	account.industry AS account_industry,
+	    	account.name AS account_name,
+	    	account.phone AS account_phone,
+	    	account.web_site AS account_web_site,
+			app_user.first_name || ' ' || app_user.last_name AS agent_name,
+       	   	referral.id AS referral_id,
+        	referral.referrer_first_name || ' ' || referral.referrer_last_name AS referrer_name,
+        	file_upload.original_file_name AS original_file_name
+        	FROM contact
+        	LEFT JOIN account ON account.id = contact.account_id
+        	LEFT JOIN app_user ON app_user.id = contact.agent_id
+        	LEFT JOIN referral ON referral.contact_id = contact.id
+        	LEFT JOIN file_upload ON file_upload.id = contact.file_id
+        	WHERE contact.id = #{id}
+    </select>
+
+    <insert id='insertContact' parameterType='com.ttm.crm.server.entity.Contact'  useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO contact (first_name, last_name, email, phone, title,
+        					 phone_cell, department, street, city, province_state, postal_code, 
+        					 country, notes, account_id, agent_id, source, referral_id, file_id)
+        VALUES (#{firstName}, #{lastName}, #{email}, #{phone}, #{title},
+        	    #{phoneCell}, #{department}, #{street}, #{city}, #{provinceState}, #{postalCode}, 
+        	    #{country}, #{notes}, #{accountId}, #{agentId}, #{source}, #{referralId}, #{fileId})
+    </insert>
+
+    <update id='updateContact' parameterType='com.ttm.crm.server.entity.Contact'>
+        UPDATE contact
+        	SET first_name = #{firstName}, 
+        		last_name = #{lastName}, 
+        		email = #{email}, 
+        		phone = #{phone},
+        		title = #{title},
+        		phone_cell = #{phoneCell},
+        		department = #{department},
+        		street = #{street},
+        		city = #{city},
+        		province_state = #{provinceState},
+        		postal_code = #{postalCode},
+        		country = #{country},
+        		notes = #{notes},
+        		account_id = #{accountId},
+           		agent_id = #{agentId},
+           		source = #{source}, 
+           		referral_id = #{referralId},
+           		file_id = #{fileId} 		
+        WHERE id = #{id}
+    </update>
+
+    <delete id='deleteContact' parameterType='integer'>
+        DELETE FROM contact WHERE id = #{id}
+    </delete>
+
+</mapper>

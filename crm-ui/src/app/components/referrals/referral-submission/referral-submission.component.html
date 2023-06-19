@@ -1,0 +1,163 @@
+
+<form #ngForm="ngForm" (ngSubmit)="onSubmit()" [formGroup]="form"  *ngIf="formLoaded">
+
+    <mat-toolbar class="top-bar"> 
+    <mat-toolbar-row>
+        <div class="center-logo-box">
+            <img src="assets/SYKER-Logo-white-blue-1536x439.png" class="center-logo" alt="">
+        </div>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+
+<mat-card class="referral-form-card">
+
+    <div class="sub-title">
+        Referral Form
+    </div>
+    <div class="referral-container">
+        <mat-form-field appearance="outline" class="referral-field-input">
+            <mat-label>Your First Name</mat-label>
+            <input matInput formControlName="referrerFirstName"/>
+            <mat-error *ngIf="form.get('referrerFirstName').errors?.['required']">
+                Please enter your First Name.
+            </mat-error>
+            <mat-error *ngIf="form.get('referrerFirstName').errors"> {{ form.get('referrerFirstName').errors['text'] }} </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="referral-field-input">
+            <mat-label>Your Last Name</mat-label>
+            <input matInput formControlName="referrerLastName"/>
+            <mat-error *ngIf="form.get('referrerLastName').errors?.['required']">
+                Please enter a Last Name.
+            </mat-error>
+            <mat-error *ngIf="form.get('referrerLastName').errors"> {{ form.get('referrerLastName').errors['text'] }} </mat-error>
+        </mat-form-field>
+    </div>
+    <div class="referral-container">
+        <mat-form-field appearance="outline" class="referral-field-input">
+            <mat-label>Your Email</mat-label>
+            <input matInput formControlName="referrerEmail"/>
+            <mat-error *ngIf="form.get('referrerEmail').errors?.['required']">
+                Please enter your Email Address.
+            </mat-error>
+            <mat-error *ngIf="form.get('referrerEmail').errors?.['email']">
+                Please enter a valid Email Address.
+            </mat-error>
+            <mat-error *ngIf="form.get('referrerEmail').errors"> {{ form.get('referrerEmail').errors['text'] }} </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="referral-field-input">
+            <mat-label>Your Phone Number</mat-label>
+            <input matInput formControlName="referrerPhone"/>
+            <mat-error *ngIf="form.get('referrerPhone').errors?.['required']">
+                Please enter a Phone Number.
+            </mat-error>
+            <mat-error *ngIf="form.get('referrerPhone').errors"> {{ form.get('referrerPhone').errors['text'] }} </mat-error>
+        </mat-form-field>
+    </div>
+    
+    <hr class="hr-style">
+    
+    <div class="referral-container">
+        <mat-form-field appearance="outline" class="referral-field-input">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstName"/>
+            <mat-error *ngIf="form.get('firstName').errors?.['required']">
+                Please enter a First Name.
+            </mat-error>
+            <mat-error *ngIf="form.get('firstName').errors"> {{ form.get('firstName').errors['text'] }} </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="referral-field-input">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastName"/>
+            <mat-error *ngIf="form.get('lastName').errors?.['required']">
+                Please enter a Last Name.
+            </mat-error>
+            <mat-error *ngIf="form.get('lastName').errors"> {{ form.get('lastName').errors['text'] }} </mat-error>
+        </mat-form-field>
+    </div>
+    <div class="referral-container">
+        <mat-form-field appearance="outline" class="referral-field-input">
+            <mat-label>Company</mat-label>
+            <input matInput formControlName="companyName"/>
+            <mat-error *ngIf="form.get('companyName').errors?.['required']">
+                Please enter a Company Name.
+            </mat-error>
+            <mat-error *ngIf="form.get('companyName').errors"> {{ form.get('companyName').errors['text'] }} </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="referral-field-input">
+            <mat-label>Job Title</mat-label>
+            <input matInput formControlName="jobTitle"/>
+            <mat-error *ngIf="form.get('jobTitle').errors?.['required']">
+                Please enter a Job Title.
+            </mat-error>
+            <mat-error *ngIf="form.get('jobTitle').errors"> {{ form.get('jobTitle').errors['text'] }} </mat-error>
+        </mat-form-field>
+    </div>
+    <div class="referral-container">
+        <mat-form-field appearance="outline" class="referral-field-input">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email"/>
+            <mat-error *ngIf="form.get('email').errors?.['required']">
+                Please enter an Email Address.
+            </mat-error>
+            <mat-error *ngIf="form.get('email').errors?.['email']">
+                Please enter a valid Email Address.
+            </mat-error>
+            <mat-error *ngIf="form.get('email').errors"> {{ form.get('email').errors['text'] }} </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="referral-field-input">
+            <mat-label>Phone Number</mat-label>
+            <input matInput formControlName="phone"/>
+            <mat-error *ngIf="form.get('phone').errors?.['required']">
+                Please enter a Phone Number.
+            </mat-error>
+            <mat-error *ngIf="form.get('phone').errors"> {{ form.get('phone').errors['text'] }} </mat-error>
+        </mat-form-field>
+    </div>
+    <div class="referral-container">
+        <mat-form-field appearance="outline" class="referral-field-input">
+            <mat-label>Notes</mat-label>
+            <textarea matInput formControlName="notes" rows="5"></textarea>
+        </mat-form-field>
+    </div>
+    <div class="referral-container">
+        <mat-checkbox class="terms-spacing" color="primary" formControlName="consentToContact" labelPosition="after">
+            <span>
+                By selecting this check box I certify that I have received consent to share the contact details provided and that Syker Systems has permission to use this information. 
+            </span>
+        </mat-checkbox>
+    </div>
+    <div class="referral-container mat-form-field-required-marker terms-error-spacing">
+        <span *ngIf="submitPressed && form.get('consentToContact').value == false">
+            * Please agree to the terms.
+        </span>
+    </div>
+    <div class="referral-container">
+        <button mat-raised-button color="primary" type="submit" [disabled]="isSubmitted">Submit</button>
+    </div>
+    <div class="referral-container">
+        <div *ngIf="serverError">
+            <br>
+            <span>{{ serverError }}</span>
+        </div>
+        <div *ngIf="isSubmitting">
+            <br>
+            <div class="submit-flex">
+                <span>Submitting Referral...</span>
+                <app-loading-spinner></app-loading-spinner>
+            </div>
+        </div>
+        <div *ngIf="isSubmitted">
+            <br><span>Referral has been submitted successfully. You may now close the browser window.</span>
+        </div>
+    </div>
+    
+</mat-card>
+
+<mat-toolbar class="bottom-bar"> 
+    <mat-toolbar-row>
+        <div>
+            <img src="assets/SYKER-Logo-white-blue-1536x439.png" class='app-logo' alt="">
+        </div>
+    </mat-toolbar-row>
+</mat-toolbar>

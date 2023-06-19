@@ -1,0 +1,77 @@
+<mat-toolbar>
+    <mat-toolbar-row>
+        <span class="toolbar-header">{{ deal ? deal.name : "" }}</span>
+        <span class="flex-expand"></span>
+        <span flex></span>
+        <!-- -->
+        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        <!-- FYI icon list is here https://mui.com/material-ui/material-icons/?query=edit -->
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="edit(id)">
+            <mat-icon>edit</mat-icon>
+            <span>Edit</span>
+          </button>
+          <!--
+          <button mat-menu-item (click)="complete()" [disabled]="!canComplete">
+            <mat-icon>done</mat-icon>
+            <span>Complete</span>
+          </button>
+          <button mat-menu-item (click)="completeAndCreate()" [disabled]="!canComplete">
+            <mat-icon>add_task</mat-icon>
+            <span>Complete & Create New</span>
+          </button>
+        -->
+          <button mat-menu-item (click)="delete()">
+            <mat-icon>delete</mat-icon>
+            <span>Delete</span>
+          </button>
+          <button mat-menu-item (click)="close(false)">
+            <mat-icon>close</mat-icon>
+            <span>Close</span>
+          </button>
+        </mat-menu>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<form class="standard-form" *ngIf="deal">
+
+    <mat-card class="form-card">
+
+        <div class="sub-title">
+            Deal Information
+        </div>
+
+        <table class="detail-table">
+            <tr>
+                <td>Name</td>
+                <td>{{ deal.name }}</td>
+                <td>Due Date</td>
+                <td>{{ deal.dueDate | dateUTCPipe }}</td>
+            </tr>
+            <tr>
+                <td>Related Contact</td>
+                <td>{{ deal.contactName }}</td>
+                <td>Related Account</td>
+                <td>{{ deal.accountName }}</td>
+            </tr>
+            <tr>
+                <td>Amount</td>
+                <td>{{ totalValue | currency }}</td>
+                <td>Stage</td>
+                <!--<td>{{ deal.stage }}</td>-->
+                <td>{{ deal.stage | enumMap: dealStages }}</td>
+            </tr>
+            <tr>
+                <td>Agent</td>
+                <td>{{ deal.agentName }}</td>
+            </tr>
+        </table>
+    </mat-card>
+
+    <app-deal-item-sub-list [canEdit]="false" [updateDealId]="updatedDealId" (messageEvent)="receiveMessage($event)" [dealId]="id"></app-deal-item-sub-list>
+
+    <app-history-sub-list [dealId]=id></app-history-sub-list>
+
+</form>

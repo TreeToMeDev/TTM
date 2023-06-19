@@ -1,0 +1,185 @@
+<form class="standard-form" #ngForm="ngForm" (ngSubmit)="onSubmit()" [formGroup]="form">
+    <mat-toolbar>
+        <mat-toolbar-row>
+            <!-- don't leave an empty hyphen in New mode -->
+            <!-- TODO probably a nicer way to do this -->
+            <span class="header">
+                {{ header }}
+            </span>
+            <span class="flex-expand"></span>
+            <span flex></span>
+            <!-- DD's version used ngSubmit() on the form, but it's not clear to me how this was linked to the button click,
+                and I can't be 100% certain that it actually worked, so to make it work, do it this way, which works but may not be best.
+                TODO research how ngSubmit works and see if it's better. -->
+            <!-- IMPORTANT first button defined gets the event when they hit Enter in any field -->
+            <button class="right-space" mat-raised-button color="primary">
+                Save Contact
+            </button>
+            <!-- https://stackoverflow.com/questions/42531167/angular-2-form-submission-canceled-because-the-form-is-not-connected -->
+            <button type="button" mat-raised-button color="primary" (click)="onCancel()">
+                Cancel    
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+        
+    <!-- copied from contact-detail, TODO, normalize these -->
+
+    <!-- TODO add back formLoaded and standardize across all forms -->
+
+    <!-- TODO make this a component -->
+    <mat-card class="form-card" *ngIf="serverError">
+        <div class="server-error">
+            {{ serverError }}
+        </div>
+    </mat-card>
+
+    <mat-card class="form-card">
+
+        <div class="sub-title">
+            Contact Information
+        </div>
+        
+        <table>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>First Name</mat-label>
+                        <input matInput formControlName="firstName">
+                        <mat-error *ngIf="form.get('firstName').errors"> {{ form.get('firstName').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Last Name</mat-label>
+                        <input matInput formControlName="lastName">
+                        <mat-error *ngIf="form.get('lastName').errors?.['required']">
+                            Please enter a Last Name.
+                        </mat-error>
+                        <mat-error *ngIf="form.get('lastName').errors"> {{ form.get('lastName').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                            <mat-label>Account</mat-label>
+                            <mat-select formControlName="accountId">
+                                <mat-option *ngFor="let account of accountList" [value]="account.id">
+                                    {{ account.name }}
+                                </mat-option>  
+                            </mat-select>
+                            <mat-error *ngIf="form.get('accountId').errors?.['required']">
+                                Please select an Account.
+                            </mat-error>
+                            <mat-error *ngIf="form.get('accountId').errors"> {{ form.get('accountId').errors['text'] }} </mat-error>
+                        </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Title</mat-label>
+                        <input matInput formControlName="title">
+                        <mat-error *ngIf="form.get('title').errors"> {{ form.get('title').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Email</mat-label>
+                        <input matInput maxlength="100" formControlName="email">
+                        <mat-error *ngIf="form.get('email').errors?.['required']">
+                            Please enter an Email Address.
+                        </mat-error>
+                        <mat-error *ngIf="form.get('email').errors?.['pattern']">
+                            Please enter a valid Email Address.
+                        </mat-error>
+                        <mat-error *ngIf="form.get('email').errors"> {{ form.get('email').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Contact Type</mat-label>
+                        <mat-select formControlName="contactTypes" multiple>
+                            <mat-option *ngFor="let cType of contactTypeList" [value]="cType.description">
+                                {{ cType.description }}
+                            </mat-option>  
+                        </mat-select>
+                        <mat-error *ngIf="form.get('contactTypes').errors?.['required']">
+                            Please select a Contact Type.
+                        </mat-error>
+                    </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Agent</mat-label>
+                        <mat-select formControlName="agentId">
+                            <mat-option *ngFor="let agent of agentList" [value]="agent.id">
+                                {{ agent.firstName }} {{ agent.lastName }}
+                            </mat-option>  
+                        </mat-select>
+                        <mat-error *ngIf="form.get('agentId').errors?.['required']">
+                            Please select an Agent.
+                        </mat-error>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Street</mat-label>
+                        <input matInput formControlName="street">
+                        <mat-error *ngIf="form.get('street').errors"> {{ form.get('street').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Phone</mat-label>
+                        <input matInput formControlName="phone">
+                        <mat-error *ngIf="form.get('phone').errors"> {{ form.get('phone').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>City</mat-label>
+                        <input matInput formControlName="city">
+                        <mat-error *ngIf="form.get('city').errors"> {{ form.get('city').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Cell Phone</mat-label>
+                        <input matInput formControlName="phoneCell">
+                        <mat-error *ngIf="form.get('phoneCell').errors"> {{ form.get('phoneCell').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Province/State</mat-label>
+                        <input matInput formControlName="provinceState">
+                        <mat-error *ngIf="form.get('provinceState').errors"> {{ form.get('provinceState').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Postal/Zip Code</mat-label>
+                        <input matInput formControlName="postalCode">
+                        <mat-error *ngIf="form.get('postalCode').errors"> {{ form.get('postalCode').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Country</mat-label>
+                        <input matInput formControlName="country">
+                        <mat-error *ngIf="form.get('country').errors"> {{ form.get('country').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+            </tr>
+        </table>
+    </mat-card>
+</form>

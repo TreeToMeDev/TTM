@@ -1,0 +1,130 @@
+<div class="container" *ngIf="!form">
+    <app-loading-spinner></app-loading-spinner>
+</div>
+<form class="standard-form" #ngForm="ngForm" (ngSubmit)="onSubmit()" [formGroup]="form" *ngIf="form">
+
+    <mat-toolbar>
+        <mat-toolbar-row>
+            <!-- don't leave an empty hyphen in New mode -->
+            <!-- TODO probably a nicer way to do this -->
+            <span class="header">{{ editMode ? "Edit " : "New " }} Deal {{ editMode ? " - " : "" }} {{ editMode && form ? form.get('name').value : ""}} </span>
+            <span class="flex-expand"></span>
+            <span flex></span>
+            <!-- DD's version used ngSubmit() on the form, but it's not clear to me how this was linked to the button click,
+                and I can't be 100% certain that it actually worked, so to make it work, do it this way, which works but may not be best.
+                TODO research how ngSubmit works and see if it's better. -->
+            <!-- IMPORTANT first button defined gets the event when they hit Enter in any field -->
+            <button class="right-space" mat-raised-button color="primary">
+                Save Deal
+            </button>
+            <button type="button" mat-raised-button color="primary" (click)="onCancel()">
+                Cancel    
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+        
+    <!-- copied from contact-detail, TODO, normalize these -->
+
+    <!-- TODO add back formLoaded and standardize across all forms -->
+
+    <!-- TODO make this a component -->
+    <mat-card class="form-card" *ngIf="serverError">
+        <div class="server-error">
+            {{ serverError }}
+        </div>
+    </mat-card>
+
+    <mat-card class="form-card">
+
+        <div class="sub-title">
+            Deal Information
+        </div>
+        
+        <table>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Name</mat-label>
+                        <input matInput formControlName="name">
+                        <mat-error *ngIf="form.get('name').errors"> {{ form.get('name').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Due Date</mat-label>
+                        <input matInput [matDatepicker]="picker" formControlName="dueDate">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Related Contact</mat-label>
+                        <mat-select formControlName="contactId">
+                            <mat-option *ngFor="let contact of contactList" [value]="contact.id">
+                                {{ contact.firstName }} {{ contact.lastName }}
+                            </mat-option>  
+                        </mat-select>
+                        <mat-error *ngIf="form.get('accountId').errors?.['required']">
+                            Please select a Contact.
+                        </mat-error>
+                        <mat-error *ngIf="form.get('contactId').errors"> {{ form.get('contactId').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Related Account</mat-label>
+                        <mat-select formControlName="accountId">
+                            <mat-option *ngFor="let account of accountList" [value]="account.id">
+                                {{ account.name }}
+                            </mat-option>  
+                        </mat-select>
+                        <mat-error *ngIf="form.get('accountId').errors?.['required']">
+                            Please select an Account.
+                        </mat-error>
+                        <mat-error *ngIf="form.get('accountId').errors"> {{ form.get('accountId').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Stage</mat-label>
+                        <mat-select formControlName="stage">
+                            <mat-option *ngFor="let stage of dealStages" [value]="stage.name">
+                               {{ stage.value }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Agent</mat-label>
+                        <mat-select formControlName="agentId">
+                            <mat-option *ngFor="let agent of agentList" [value]="agent.id">
+                                {{ agent.firstName }} {{ agent.lastName }}
+                            </mat-option>  
+                        </mat-select>
+                        <mat-error *ngIf="form.get('agentId').errors?.['required']">
+                            Please select an Agent.
+                        </mat-error>
+                        <mat-error *ngIf="form.get('agentId').errors"> {{ form.get('agentId').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Total Value</mat-label>
+                        <input matInput [readonly]="true" [value]="totalValue | currency" formControlName="totalValue"/>
+                    </mat-form-field>
+                </td>
+            </tr>
+        </table>
+    </mat-card>
+    
+</form>
+
+<app-deal-item-sub-list [canEdit]="true" [updateDealId]="updatedDealId" (messageEvent)="receiveMessage($event)" [dealId]="id"></app-deal-item-sub-list>

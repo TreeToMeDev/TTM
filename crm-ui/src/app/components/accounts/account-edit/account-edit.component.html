@@ -1,0 +1,223 @@
+<form class="standard-form" #ngForm="ngForm" (ngSubmit)="onSubmit()" [formGroup]="form">
+
+    <mat-toolbar>
+        <mat-toolbar-row>
+        <span class="header">
+            {{ header }}
+        </span>
+        <span class="toolbar-header"></span>
+        <span class="flex-expand"></span>
+        <span flex></span>
+        <!-- IMPORTANT first button defined gets the event when they hit Enter in any field -->
+        <button mat-raised-button class="right-space" color="primary" type="submit">Save Account</button>
+        <button mat-raised-button color="primary" (click)="onCancel()">Cancel</button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <mat-card class="form-card" *ngIf="serverError">
+        <div class="server-error">
+            {{ serverError }}
+        </div>
+    </mat-card>
+
+    <mat-card class="form-card">
+
+        <div class="sub-title">
+            Account Information
+        </div>
+
+        <table>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Account Name</mat-label>
+                        <input matInput formControlName="name"/>
+                        <mat-error *ngIf="form.get('name').errors?.['required']">
+                            Please enter a Name.
+                        </mat-error>
+                        <mat-error *ngIf="form.get('name').errors"> {{ form.get('name').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Industry</mat-label>
+                        <mat-select formControlName="industry">
+                            <mat-option *ngFor="let ind of industries" [value]="ind.name">
+                               {{ ind.value }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Account Type</mat-label>
+                        <mat-select formControlName="accountType">
+                            <mat-option value="Prospect">Prospect</mat-option>
+                            <mat-option value="Active">Active</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="form.get('accountType').errors?.['required']">
+                            Please enter an Account Type.
+                        </mat-error>
+                        <mat-error *ngIf="form.get('accountType').errors"> {{ form.get('accountType').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                      <mat-label>Agent</mat-label>
+                      <mat-select formControlName="agentId">
+                          <!-- TODO understand what both value properties actually do -->
+                          <mat-option *ngFor="let agent of agentList" [value]="agent.id">
+                              {{ agent.firstName }} {{ agent.lastName }}
+                          </mat-option>  
+                      </mat-select>
+                      <mat-error *ngIf="form.get('agentId').errors?.['required']">
+                          Please select an Agent.
+                      </mat-error>
+                    </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Account Website</mat-label>
+                        <input matInput formControlName="webSite"/>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Currency</mat-label>
+                        <mat-select formControlName="currency">
+                            <!-- TODO understand what both value properties actually do -->
+                            <mat-option *ngFor="let currency of currencyList" [value]="currency.code">
+                                {{ currency.description }}
+                            </mat-option>  
+                        </mat-select>
+                        <mat-error *ngIf="form.get('currency').errors?.['required']">
+                            Please enter a Currency.
+                        </mat-error>
+                        <mat-error *ngIf="form.get('currency').errors"> {{ form.get('currency').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Phone</mat-label>
+                        <input matInput formControlName="phone"/>
+                    </mat-form-field>
+                </td>
+            </tr>
+            
+        </table>
+            
+    </mat-card>
+       
+    <mat-card class="form-card">
+
+        <div class="sub-title">
+            Address Information
+        </div>
+
+        <table>
+
+            <tr>
+                <td> </td>
+                <td>
+                    <mat-checkbox class="table-checkbox" color="primary" formControlName="shippingAddressSameAsBilling" labelPosition="before" (change)="onShippingSameChange()">
+                        Shipping same as Billing?
+                    </mat-checkbox>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Billing Street</mat-label>
+                        <input matInput formControlName="billingStreet"/>
+                    </mat-form-field>
+                    <mat-error *ngIf="form.get('billingStreet').errors"> {{ form.get('billingStreet').errors['text'] }} </mat-error>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Shipping Street</mat-label>
+                        <input matInput formControlName="shippingStreet"/>
+                    </mat-form-field>
+                    <mat-error *ngIf="form.get('shippingStreet').errors"> {{ form.get('shippingStreet').errors['text'] }} </mat-error>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Billing City</mat-label>
+                        <input matInput formControlName="billingCity"/>
+                    </mat-form-field>
+                    <mat-error *ngIf="form.get('billingCity').errors"> {{ form.get('billingCity').errors['text'] }} </mat-error>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Shipping City</mat-label>
+                        <input matInput formControlName="shippingCity"/>
+                        <mat-error *ngIf="form.get('shippingCity').errors"> {{ form.get('shippingCity').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Billing Province/State</mat-label>
+                        <input matInput formControlName="billingProvinceState"/>
+                    </mat-form-field>
+                    <mat-error *ngIf="form.get('billingProvinceState').errors"> {{ form.get('billingProvinceState').errors['text'] }} </mat-error>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Shipping Province/State</mat-label>
+                        <input matInput formControlName="shippingProvinceState"/>
+                    </mat-form-field>
+                    <mat-error *ngIf="form.get('shippingProvinceState').errors"> {{ form.get('shippingProvinceState').errors['text'] }} </mat-error>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Billing Postal Code</mat-label>
+                        <input matInput formControlName="billingPostalCode"/>
+                    </mat-form-field>
+                    <mat-error *ngIf="form.get('billingPostalCode').errors"> {{ form.get('billingPostalCode').errors['text'] }} </mat-error>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Shipping Postal Code</mat-label>
+                        <input matInput formControlName="shippingPostalCode"/>
+                    </mat-form-field>
+                    <mat-error *ngIf="form.get('shippingPostalCode').errors"> {{ form.get('shippingPostalCode').errors['text'] }} </mat-error>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Billing Country</mat-label>
+                        <input matInput formControlName="billingCountry"/>
+                    </mat-form-field>
+                    <mat-error *ngIf="form.get('billingCountry').errors"> {{ form.get('billingCountry').errors['text'] }} </mat-error>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Shipping Country</mat-label>
+                        <input matInput formControlName="shippingCountry"/>
+                    </mat-form-field>
+                    <mat-error *ngIf="form.get('shippingCountry').errors"> {{ form.get('shippingCountry').errors['text'] }} </mat-error>
+                </td>
+            </tr>
+
+        </table>
+            
+    </mat-card>
+
+</form>

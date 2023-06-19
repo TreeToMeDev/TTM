@@ -1,0 +1,1 @@
+ALTER TABLE task RENAME COLUMN owner_user_id TO agent_id;

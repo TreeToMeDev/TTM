@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='com.ttm.crm.server'>
+
+    
+    <select id='selectNotesByAccount' parameterType='integer' resultType='com.ttm.crm.server.entity.Note'>
+    	SELECT note.*,
+    		app_user.first_name || ' ' || app_user.last_name AS user_name
+    		FROM note
+    		LEFT JOIN app_user ON app_user.id = note.user_id
+    		WHERE account_id = #{accountId}
+    </select>
+
+    <select id='selectNotesByContact' parameterType='integer' resultType='com.ttm.crm.server.entity.Note'>
+    	SELECT note.*,
+    		app_user.first_name || ' ' || app_user.last_name AS user_name
+    		FROM note
+    		LEFT JOIN app_user ON app_user.id = note.user_id
+    		WHERE contact_id = #{contactId}
+    </select>
+
+	<select id='selectNotesByReferral' parameterType='integer' resultType='com.ttm.crm.server.entity.Note'>
+    	SELECT * FROM note WHERE referral_id = #{referralId}
+    	<!--  TODO add user stuff? -->
+    </select>
+    
+    <select id='selectNote' parameterType='integer' resultType='com.ttm.crm.server.entity.Note'>
+    	SELECT note.*,
+    		app_user.first_name || ' ' || app_user.last_name AS user_name
+    		FROM note
+    		LEFT JOIN app_user ON app_user.id = note.user_id
+    		WHERE note.id = #{id}
+    </select>
+
+    <insert id='insertNote' parameterType='com.ttm.crm.server.entity.Note'>
+    	INSERT INTO note
+    		(account_id, contact_id, referral_id, text, timestamp, user_id)
+   		VALUES
+   			(#{accountId}, #{contactId}, #{referralId}, #{text}, #{timeStamp}, #{userId})
+    </insert>
+
+	<insert id='updateNote' parameterType='com.ttm.crm.server.entity.Note'>
+    	UPDATE note SET
+    		text = #{text},
+    		timestamp = #{timeStamp},
+    		user_id = #{userId}
+    	WHERE id = #{id}
+    </insert>
+
+	<insert id='updateReferralNotes' parameterType='java.util.Map'>
+    	UPDATE note SET
+    		contact_id = #{contactId},
+    		account_id = #{accountId}
+    	WHERE referral_id = #{referralId}
+    </insert>
+    
+    <delete id='deleteNote' parameterType='integer'>
+        DELETE FROM note WHERE id = #{id}
+    </delete>
+
+</mapper>

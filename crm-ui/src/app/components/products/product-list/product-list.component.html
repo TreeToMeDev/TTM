@@ -1,0 +1,82 @@
+<mat-toolbar class="sub-toolbar">
+    <mat-toolbar-row>
+        <span class="toolbar-header"></span>
+        <span class="flex-expand"></span>
+        <span flex></span>
+        <button class="button-spacer" mat-raised-button color="primary" routerLink="new">
+            Create Product
+        </button>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-card class="content-card">
+    <form class="filter-form" *ngIf="!isLoading" [formGroup]="filterForm" #ngForm="ngForm" (submit)="applyFilter()">
+        <div>
+            <mat-form-field appearance="outline" class="mat-filter-field-input">
+                <mat-label>Product Code contains</mat-label>
+                <input matInput formControlName="filterProductCode">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mat-filter-field-input">
+                <mat-label>Available From</mat-label>
+                <input matInput [matDatepicker]="picker1"
+                    formControlName="filterFromDate" (click)="picker1.open()">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mat-filter-field-input">
+                <mat-label>Available To</mat-label>
+                <input matInput [matDatepicker]="picker2"
+                    formControlName="filterToDate" (click)="picker2.open()">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="mat-filter-field-input">
+                <mat-label>Warranty Duration</mat-label>
+                <mat-select formControlName="filterWarrantyDuration" multiple>
+                    <mat-option *ngFor="let warranty of productWarranties" [value]="warranty.name">
+                        {{ warranty.value }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <button class="button-space" mat-raised-button color="accent">Submit</button>
+            <button class="button-space" mat-raised-button color="accent" type="button" (click)="resetFilterForm()">Clear</button>
+        </div>
+    </form>
+    <table mat-table [dataSource]="dataSource" class="list-table list-table-with-filters">
+
+        <ng-container matColumnDef="productCode">
+            <th mat-header-cell *matHeaderCellDef>Product Code</th>
+            <td mat-cell *matCellDef="let product"> 
+                <!-- TODO: [routerLink] as opposed to routerLink (no brackets)
+                        breaks the color rule, which makes the text purpleish -->
+                <a [routerLink]="['/products', product.id]">
+                    {{product.productCode}}
+                </a>
+            </td>
+        </ng-container>
+        
+        <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef>Description</th>
+            <td mat-cell *matCellDef="let product"> {{product.description}} {{ product.measurementAmount > 0 ? '- ' + product.measurementDescription + ': ' + product.measurementAmount : ''}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="quantityOnHand">
+            <th mat-header-cell *matHeaderCellDef>On Hand</th>
+            <td mat-cell *matCellDef="let product"> {{product.quantityOnHand}} </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="warrantyDuration">
+            <th mat-header-cell *matHeaderCellDef>Warranty Duration</th>
+            <td mat-cell *matCellDef="let product"> {{ product.warrantyDuration | enumMap: productWarranties }} </td>
+        </ng-container>
+        
+        <ng-container matColumnDef="availableDate">
+            <th mat-header-cell *matHeaderCellDef>Date Available</th>
+            <td mat-cell *matCellDef="let product"> {{product.availableDate | dateUTCPipe }} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+</mat-card>

@@ -1,0 +1,5 @@
+CREATE TABLE note (
+	id SERIAL,
+	account_id INTEGER NOT NULL,
+	text VARCHAR NOT NULL
+)

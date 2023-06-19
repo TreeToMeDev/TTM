@@ -1,0 +1,30 @@
+<mat-toolbar *ngIf="!isLoading">
+    <mat-toolbar-row>
+        <span class="toolbar-header">Welcome {{userName}}</span>
+        <span class="flex-expand"></span>
+        <span flex></span>
+        <mat-form-field appearance="outline" class="mat-form-field-input" *ngIf="loginUserParentId == -1">
+            <mat-label>User</mat-label>
+            <mat-select [(value)]="userSelected" (selectionChange)="onUserChange()">
+                <mat-option *ngFor="let user of users" [value]="user.id">
+                    {{ user.firstName }} {{ user.lastName }}
+                </mat-option>  
+            </mat-select>
+        </mat-form-field>
+    </mat-toolbar-row>
+</mat-toolbar>
+<mat-grid-list cols="2" rowHeight="2:1.2" *ngIf="!isLoading">
+    <mat-grid-tile>
+        <app-dashboard-open-tasks [userId]="userSelected"></app-dashboard-open-tasks>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <app-dashboard-new-leads [userId]="userSelected"></app-dashboard-new-leads>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <app-dashboard-account-type-totals [userId]="userSelected"></app-dashboard-account-type-totals>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <app-dashboard-account-country-totals [userId]="userSelected"></app-dashboard-account-country-totals>
+    </mat-grid-tile>
+    
+  </mat-grid-list>

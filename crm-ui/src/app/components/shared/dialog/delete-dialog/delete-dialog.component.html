@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>{{description}}</h2>
+
+<mat-dialog-content [formGroup]="form">
+  
+   <mat-label>Confirm Delete?</mat-label>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button class="mat-raised-button"(click)="close()">No, Don't Delete</button>
+    <button class="mat-raised-button mat-primary"(click)="save()">Yes, Delete!</button>
+</mat-dialog-actions>

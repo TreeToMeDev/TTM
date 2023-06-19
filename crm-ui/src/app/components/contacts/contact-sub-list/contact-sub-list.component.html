@@ -1,0 +1,53 @@
+<form class="standard-form" #ngForm="ngForm">
+    <mat-accordion multi [togglePosition]="'before'">
+        <div class="accordion-spacer">
+            <mat-expansion-panel [expanded]="true" class="expansion-panel">
+                <mat-expansion-panel-header class="panel-header">
+                    <mat-panel-title class="panel-title">
+                        Contacts
+                    </mat-panel-title>
+					<button mat-raised-button color="primary" (click)="addView('ADD', $event, -1)">
+                        New Contact    
+                    </button>
+                </mat-expansion-panel-header>
+                <div *ngIf="contacts == null || contacts.length == 0" class="no-records">
+                    <i>No records found</i>
+                </div>
+                <div *ngIf="contacts != null && contacts.length > 0">
+                    <div *ngIf="contacts != undefined">
+						<table mat-table [dataSource]="contacts" class="list-table">
+							<ng-container matColumnDef="name">
+								<th mat-header-cell *matHeaderCellDef>
+									Name
+								</th>
+								<td mat-cell *matCellDef="let contact">
+									<a class="link-style" [routerLink]="['/contacts/', contact.id]">
+										{{contact.firstName}} {{contact.lastName}}
+									</a>
+								</td>
+							</ng-container>
+							<ng-container matColumnDef="email">
+								<th mat-header-cell *matHeaderCellDef>
+									Email
+								</th>
+								<td mat-cell *matCellDef="let contact">
+									<a [href]="'mailto:' + contact.email">{{ contact.email }}</a>
+								</td>
+							</ng-container>
+							<ng-container matColumnDef="phone">
+								<th mat-header-cell *matHeaderCellDef>
+									Phone
+								</th>
+								<td mat-cell *matCellDef="let contact">
+									{{contact.phone }}
+								</td>
+							</ng-container>
+							<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+							<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+						</table>
+					</div>
+				</div>
+			</mat-expansion-panel>
+		</div>
+	</mat-accordion>
+</form>

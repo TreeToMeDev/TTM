@@ -1,0 +1,22 @@
+<div class="container" *ngIf="isLoading">
+    <app-loading-spinner></app-loading-spinner>
+</div>
+<mat-card class="dashboard-card" *ngIf="!isLoading">
+    <mat-card-header>
+        <mat-card-title>
+            {{ 'Account Types' }}
+            <!-- <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
+                <mat-icon>more_vert</mat-icon>
+            </button> -->
+            <mat-menu #menu="matMenu" xPosition="before">
+                <button mat-menu-item>Expand</button>
+                <button mat-menu-item>Remove</button>
+            </mat-menu>
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="dashboard-card-content"  *ngIf="pieChartData">
+        <canvas baseChart class="chart" 
+                [data]="pieChartData" [options]="pieChartOptions" [type]="chartType">
+        </canvas>
+    </mat-card-content>
+ </mat-card>

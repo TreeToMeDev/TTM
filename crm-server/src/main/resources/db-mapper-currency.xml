@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='com.ttm.crm.server'>
+
+	<select id='selectAllCurrencies' resultType='com.ttm.crm.server.entity.Currency'>
+    	SELECT *
+    		FROM currency
+    		ORDER BY currency.code
+    </select>
+    
+    <select id='selectCurrency' parameterType='string' resultType='com.ttm.crm.server.entity.Currency'>
+    	SELECT * 
+    		FROM currency
+    		WHERE currency.code = #{code}
+    </select>
+
+    <insert id='insertCurrency' parameterType='com.ttm.crm.server.entity.Currency'>    
+    	INSERT INTO currency(
+    		code,
+    		description
+  		) VALUES (
+  			#{code},
+  			#{description}
+   		)
+    </insert>
+
+    <update id='updateCurrency' parameterType='com.ttm.crm.server.entity.Currency'>
+    	UPDATE currency SET
+    		description = #{description}
+    		WHERE code = #{code}
+    </update>
+    
+    <select id='deleteCurrency' parameterType='string'>
+    	DELETE FROM currency WHERE code = #{code};
+    </select> 
+    
+</mapper>

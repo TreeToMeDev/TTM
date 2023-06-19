@@ -1,0 +1,11 @@
+<div class="container" *ngIf="authService.isLoading$ | async; else loaded">
+    <app-loading-spinner></app-loading-spinner>
+</div>
+
+<ng-template #loaded>
+    <app-syker-header *ngIf="authService.isAuthenticated$ | async"></app-syker-header>
+    
+    <div class="router-outlet">
+        <router-outlet></router-outlet>
+    </div>
+</ng-template>

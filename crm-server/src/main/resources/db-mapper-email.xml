@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='com.ttm.crm.server'>
+
+    <select id='selectEmailsByContact' parameterType='integer' resultType='com.ttm.crm.server.entity.Email'>
+    	SELECT *
+    		FROM email
+    		WHERE contact_id = #{contactId}
+    </select>
+
+    <insert id='insertEmail' parameterType='com.ttm.crm.server.entity.Email'  useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO email
+        	(body,
+        	 contact_id,
+        	 recipient,
+        	 subject,
+        	 timestamp,
+        	 user_id)
+        VALUES 
+        	(#{body},
+        	 #{contactId},
+        	 #{recipient},
+        	 #{subject},
+        	 #{timeStamp},
+        	 #{userId})
+    </insert>
+    
+</mapper>

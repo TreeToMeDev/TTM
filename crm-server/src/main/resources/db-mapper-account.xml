@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='com.ttm.crm.server'>
+
+    <select id='selectAccounts' parameterType='integer' resultType='com.ttm.crm.server.entity.Account'>
+    	SELECT account.*, 
+    		   app_user.first_name || ' ' || app_user.last_name AS agent_name,
+    		   currency.description AS currency_description 
+    		FROM account
+    		LEFT JOIN app_user ON app_user.id = account.agent_id
+    		LEFT JOIN currency ON currency.code = account.currency
+    		<!--  TODO if name, should be case INsensitive, but it's not ATM -->
+    		WHERE account.agent_id IN (SELECT get_accessible_ids(#{agentId}))
+    		ORDER BY name;
+    </select>
+
+    <select id='selectAccount' parameterType='integer' resultType='com.ttm.crm.server.entity.Account'>
+    	SELECT account.*, 
+    		   app_user.first_name || ' ' || app_user.last_name AS agent_name,
+    		   currency.description AS currency_description 
+    		FROM account
+    		LEFT JOIN app_user ON app_user.id = account.agent_id
+    		LEFT JOIN currency ON currency.code = account.currency
+    		WHERE account.id = #{id};
+    </select>
+
+    <select id='selectAccountByName' parameterType='string' resultType='com.ttm.crm.server.entity.Account'>
+    	SELECT *
+			FROM account
+		    WHERE account.name = #{name}
+			LIMIT 1;
+    </select>
+
+    <insert id='insertAccount' parameterType='com.ttm.crm.server.entity.Account' useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+  		INSERT INTO account
+        	(account_type, 
+        	 billing_city, billing_country, billing_street, billing_postal_code, billing_province_state,
+        	 currency, industry, name, phone, agent_id,
+        	 shipping_address_same_as_billing, shipping_city, shipping_country, shipping_postal_code, shipping_province_state, shipping_street,
+    		 web_site)
+    	VALUES (
+    		 #{accountType},
+        	 #{billingCity}, #{billingCountry}, #{billingStreet}, #{billingPostalCode}, #{billingProvinceState},
+        	 #{currency}, #{industry}, #{name}, #{phone}, #{agentId},
+        	 #{shippingAddressSameAsBilling}, #{shippingCity}, #{shippingCountry}, #{shippingPostalCode}, #{shippingProvinceState}, #{shippingStreet},
+    		 #{webSite} )
+    </insert>
+
+    <update id='updateAccount' parameterType='com.ttm.crm.server.entity.Account'>
+        UPDATE account
+        	SET	account_type = #{accountType},
+        	 	billing_city = #{billingCity},
+        	 	billing_country = #{billingCountry}, 
+        	 	billing_street = #{billingStreet},
+        	 	billing_postal_code = #{billingPostalCode},
+        	 	billing_province_state = #{billingProvinceState},
+        	 	currency = #{currency},
+        	 	industry = #{industry},
+        	 	name = #{name},
+        	 	agent_id = #{agentId},
+        	 	phone = #{phone},
+        	 	shipping_address_same_as_billing = #{shippingAddressSameAsBilling},
+        	 	shipping_city = #{shippingCity}, 
+        	 	shipping_country = #{shippingCountry},
+        	 	shipping_postal_code = #{shippingPostalCode},
+        	 	shipping_province_state = #{shippingProvinceState},
+        	 	shipping_street = #{shippingStreet},
+    		 	web_site = #{webSite}
+   		 	WHERE id = #{id};
+	</update>
+    
+     <delete id='deleteAccount' parameterType='integer'>
+        DELETE FROM account WHERE id = #{id}
+    </delete>
+    
+</mapper>

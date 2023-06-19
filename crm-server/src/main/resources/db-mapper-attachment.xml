@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='com.ttm.crm.server'>
+
+    <select id='selectAttachmentsByAccount' parameterType='integer' resultType='com.ttm.crm.server.entity.Attachment'>
+    	SELECT attachment.*,
+    		   app_user.first_name || ' ' || app_user.last_name AS user_name
+    		FROM attachment
+    		LEFT JOIN app_user ON app_user.id = attachment.user_id
+    		WHERE account_id = #{accountId}
+    </select>
+
+    <select id='selectAttachment' parameterType='integer' resultType='com.ttm.crm.server.entity.Attachment'>
+    	SELECT attachment.*,
+    		   app_user.first_name || ' ' || app_user.last_name AS user_name
+    		FROM attachment
+    		LEFT JOIN app_user ON app_user.id = attachment.user_id
+    		WHERE attachment.id = #{id}
+    </select>
+    
+	<insert id='insertAttachment' parameterType='com.ttm.crm.server.entity.Attachment'>
+    	INSERT INTO attachment
+    		(account_id, name, size, storage_id, user_id)
+   		VALUES
+   			(#{accountId}, #{name}, #{size}, #{storageId}, #{userId})
+    </insert>
+
+    <delete id='deleteAttachment' parameterType='integer'>
+        DELETE FROM attachment WHERE id = #{id}
+    </delete>
+
+</mapper>

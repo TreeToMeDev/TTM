@@ -1,0 +1,56 @@
+<mat-toolbar>
+    <mat-toolbar-row>
+        <!-- TODO the ternary is a weird way to avoid a null, look into this -->
+        <span class="toolbar-header">{{product ? product.productCode : ""}} {{product ? "- " +  product.description : ""}}</span>
+        <span class="flex-expand"></span>
+        <span flex></span>
+        <button class="right-space" mat-raised-button color="primary" routerLink="edit">
+            Edit Product
+        </button>
+        <button mat-raised-button color="warn" (click)="openDialog('0ms', '0ms')">
+            Delete    
+        </button>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<form *ngIf="product">
+
+    <mat-card class="form-card">
+
+        <div class="sub-title">
+            Product Information
+        </div>
+
+        <table class="detail-table">
+            <tr>
+                <td>Product Code</td>
+                <td>{{ product.productCode }}</td>
+                <td>Description</td>
+                <td>{{ product.description }}</td>
+            </tr>
+            <tr>
+                <td>On Hand</td>
+                <td>{{ product.quantityOnHand }}</td>
+                <td>Price</td>
+                <td>{{ product.price }}</td>
+            </tr>
+            <tr>
+                <td>Measurement Type</td>
+                <td>{{ product.measurementDescription }}</td>
+                <td>Measurement Amount</td>
+                <td>{{ product.measurementAmount }}</td>
+            </tr>
+            <tr>
+                <td>Date Available</td>
+                <td>{{ product.availableDate | dateUTCPipe }}</td><td>Warranty Duration</td>
+                <td>{{ product.warrantyDuration | enumMap: productWarranties }}</td>
+            </tr>
+            <tr>
+                <td>Last User</td>
+                <td>{{ product.lastUser }}</td>
+                <td>Last Timestamp</td>
+                <td>{{ product.lastTimestamp | dateTimeLocalPipe }}</td>
+            </tr>
+       </table>
+    </mat-card>
+</form>

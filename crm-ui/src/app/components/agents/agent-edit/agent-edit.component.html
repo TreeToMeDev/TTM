@@ -1,0 +1,82 @@
+<form class="standard-form" #ngForm="ngForm" (ngSubmit)="onSubmit()" [formGroup]="form">
+
+    <mat-toolbar>
+        <mat-toolbar-row>
+        <span class="header">
+            {{ header }}
+        </span>
+        <span class="toolbar-header"></span>
+        <span class="flex-expand"></span>
+        <span flex></span>
+        <button mat-raised-button class="right-space" color="primary">Save Agent</button>
+        <button type="button" mat-raised-button color="primary" (click)="onCancel()">Cancel</button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <mat-card class="form-card" *ngIf="serverError">
+        <div class="server-error">
+            {{ serverError }}
+            <!-- special logic so they can see message telling them assigned password (not actually an error) -->
+            <button *ngIf="showClose" (click)="onCancel()" mat-raised-button color="primary" style="margin-left:2vw">Close</button>
+        </div>
+    </mat-card>
+
+    <mat-card class="form-card">
+
+        <div class="sub-title">
+            User Information
+        </div>
+
+        <table>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>First Name</mat-label>
+                        <input matInput formControlName="firstName"/>
+                        <mat-error *ngIf="form.get('firstName').errors?.['required']">
+                            Please enter a First Name.
+                        </mat-error>
+                        <mat-error *ngIf="form.get('firstName').errors"> {{ form.get('firstName').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Last Name</mat-label>
+                        <input matInput formControlName="lastName"/>
+                        <mat-error *ngIf="form.get('lastName').errors?.['required']">
+                            Please enter a Last Name.
+                        </mat-error>
+                        <mat-error *ngIf="form.get('lastName').errors"> {{ form.get('lastName').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Email</mat-label>
+                        <input matInput formControlName="email"/>
+                        <mat-error *ngIf="form.get('email').errors?.['required']">
+                            Please enter an Email address.
+                        </mat-error>
+                        <mat-error *ngIf="form.get('email').errors"> {{ form.get('email').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Parent</mat-label>
+                        <mat-select formControlName="parentId">
+                            <mat-option *ngFor="let agent of agentList" [value]="agent.id">
+                                {{ agent.firstName }} {{ agent.lastName }}
+                            </mat-option>  
+                        </mat-select>
+                        <mat-error *ngIf="form.get('parentId').errors?.['required']">
+                            Please select a Parent Agent.
+                        </mat-error>
+                    </mat-form-field>
+                </td>
+            </tr>
+        </table>
+            
+    </mat-card>       
+
+</form>

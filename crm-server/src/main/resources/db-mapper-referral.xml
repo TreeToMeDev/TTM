@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='com.ttm.crm.server'>
+
+	<select id='selectReferrals' resultType='com.ttm.crm.server.entity.Referral'>
+    	SELECT *
+    		FROM referral 
+    		ORDER BY referral.submit_timestamp
+    </select>
+       
+    <select id='selectOpenReferrals' resultType='com.ttm.crm.server.entity.Referral'>
+    	SELECT *
+    		FROM referral
+    		WHERE contact_id = 0 
+    		ORDER BY referral.submit_timestamp
+    </select>
+     
+    <select id='selectReferral' parameterType='integer' resultType='com.ttm.crm.server.entity.Referral'>
+    	SELECT *
+    		FROM referral
+    		WHERE referral.id = #{id}
+    </select>
+
+    <insert id='insertReferral' keyColumn='id' keyProperty='id' parameterType='com.ttm.crm.server.entity.Referral' useGeneratedKeys='true'>    
+    	INSERT INTO referral(
+    		company_name, email, first_name, job_title, last_name, notes, phone,
+    		referrer_email, referrer_first_name, referrer_last_name, referrer_phone,
+    		consent_to_contact
+    		 
+  		) VALUES (
+  			#{companyName}, #{email}, #{firstName}, #{jobTitle}, #{lastName}, #{notes}, #{phone},
+   			#{referrerEmail}, #{referrerFirstName}, #{referrerLastName}, #{referrerPhone},
+   			#{consentToContact}
+   		)
+    </insert>
+
+    <update id='updateReferral' parameterType='com.ttm.crm.server.entity.Referral'>
+    	UPDATE referral SET
+    		company_name = #{companyName},
+    		contact_id = #{contactId},
+    		email = #{email},
+   			first_name = #{firstName},
+    		job_title = #{jobTitle},
+    		last_name = #{lastName},
+    		notes = #{notes},
+    		phone = #{phone},
+    		referrer_email = #{referrerEmail},
+    		referrer_first_name = #{referrerFirstName},
+    		referrer_last_name = #{referrerLastName},
+    		referrer_phone = #{referrerPhone}
+    		WHERE id = #{id}
+    </update>
+    
+    <select id='deleteReferral' parameterType='integer'>
+    	DELETE FROM referral WHERE id = #{id};
+    </select> 
+       
+</mapper>

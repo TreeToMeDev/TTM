@@ -1,0 +1,75 @@
+.top-bar {
+    background-color: rgb(70, 165, 248);
+    display: flex;
+}
+
+.bottom-bar {
+    background-color: #000;
+    position: relative;
+    width: 100%;
+}
+
+.center-logo-box {
+    width: 25vw;
+    margin: auto;
+    margin-top: 2vw;
+    background-color: #000;
+    border-radius: 5px;
+}
+
+.center-logo {
+    display: block;
+    margin: auto;
+    width: 80%;
+    padding-top: 2vw;
+    padding-bottom: 2vw;
+}
+
+.referral-form-card {
+	margin: 0 auto;
+    margin-top: 10vw;
+    margin-bottom: 20vw;
+    width: 50%;
+    min-width: 500px;
+    background-color:whitesmoke;
+}
+
+.mat-form-field-required-marker { 
+    color: red 
+}
+
+.referral-field-input {
+    width: 100%;
+	font-size: .9em;
+}
+
+.referral-container {
+    display: flex;
+    font-size: 16px;
+    width: 100%;
+    gap: 10px;
+}
+
+.submit-flex {
+    display: flex;
+}
+
+.hr-style {
+    height: 3px;
+    border: none;
+    background: black;
+}
+
+.mat-checkbox span {
+    white-space: normal !important;
+    color: blue;
+}
+
+.terms-spacing {
+    padding-top: 0.5em;
+}
+
+.terms-error-spacing {
+    padding-top: 0.5em;
+    padding-bottom: 1em;
+}

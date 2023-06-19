@@ -1,0 +1,71 @@
+<form class="standard-form" *ngIf="!isLoading" [formGroup]="form" (ngSubmit)="save()">
+    
+    <mat-toolbar>
+        <mat-toolbar-row>
+            <span class="header">{{ editMode ? "Edit " : "New " }} Purchase</span>
+            <span class="flex-expand"></span>
+            <span flex></span>
+            <button class="right-space" mat-raised-button color="primary">
+                Save Purchase
+            </button>
+            <button type="button" mat-raised-button color="primary" (click)="cancel()">
+                Cancel    
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+    
+    <mat-card class="form-card">
+        
+        <!-- TODO: remove these sub-headings, they are useless since they just repeat whats in the header.
+             Maybe there are some cases where they make sense? -->
+        <div class="sub-title">
+            Purchase Information
+        </div>
+        
+        <table>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Product Code</mat-label>
+                        <mat-select formControlName="productCode" (selectionChange)="onValueChange()">
+                            <mat-option *ngFor="let product of products" [value]="product.productCode">
+                               {{ product.productCode }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Serial Number</mat-label>
+                        <input matInput formControlName="serialNo"/>
+                    </mat-form-field>
+                </td>
+            </tr>    
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Purchase Date</mat-label>
+                        <input matInput [matDatepicker]="picker" formControlName="purchaseDate" (dateChange)="onValueChange()">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Warranty End Date</mat-label>
+                        <input matInput [matDatepicker]="picker2" formControlName="warrantyEndDate">
+                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                        <mat-datepicker #picker2></mat-datepicker>
+                    </mat-form-field>
+                </td>
+            </tr>
+        
+        </table>
+
+    </mat-card>
+
+</form>

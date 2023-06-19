@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='com.ttm.crm.server'>
+	
+	<select id='selectAppConfig' parameterType='java.util.Map' resultType='com.ttm.crm.server.entity.AppConfig'>
+    	SELECT * FROM app_config
+    		WHERE category = #{category}
+    		  AND config_option = #{configOption}
+    </select>
+
+	<select id='selectAppConfigByCategory' parameterType="string" resultType='com.ttm.crm.server.entity.AppConfig'>
+    	SELECT * FROM app_config
+    		WHERE category = #{category}
+    		ORDER BY category, config_option
+    </select>
+    
+</mapper>

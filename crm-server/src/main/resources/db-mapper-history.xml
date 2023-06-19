@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='com.ttm.crm.server'>
+
+    <select id='selectHistoryAllByAccountId' parameterType='integer' resultType='com.ttm.crm.server.entity.History'>
+    	SELECT history.*, app_user.first_name || ' ' || app_user.last_name AS user_name
+    		FROM history
+        	LEFT JOIN app_user ON app_user.id = history.user_id
+        	WHERE history.account_id = #{accountId}
+        	ORDER BY history.timestamp DESC
+    </select>
+
+    <select id='selectHistoryAllByContactId' parameterType='integer' resultType='com.ttm.crm.server.entity.History'>
+    	SELECT history.*, app_user.first_name || ' ' || app_user.last_name AS user_name
+    		FROM history
+        	LEFT JOIN app_user ON app_user.id = history.user_id
+        	WHERE history.contact_id = #{contactId}
+        	ORDER BY history.timestamp DESC
+    </select>
+    
+    <select id='selectHistoryAllByDealId' parameterType='integer' resultType='com.ttm.crm.server.entity.History'>
+    	SELECT history.*, app_user.first_name || ' ' || app_user.last_name AS user_name
+    		FROM history
+        	LEFT JOIN app_user ON app_user.id = history.user_id
+        	WHERE history.record_id = #{dealId}
+        	  AND (history.table_name = 'Deal' OR history.table_name = 'DealItem')
+        	ORDER BY history.timestamp DESC
+    </select>
+    
+    <select id='selectHistoryAllByTaskId' parameterType='integer' resultType='com.ttm.crm.server.entity.History'>
+    	SELECT history.*, app_user.first_name || ' ' || app_user.last_name AS user_name
+    		FROM history
+        	LEFT JOIN app_user ON app_user.id = history.user_id
+        	WHERE history.record_id = #{taskId}
+        	  AND history.table_name = 'Task'
+        	ORDER BY history.timestamp DESC
+    </select>
+        
+    <select id='selectHistoryLatestByAccountId' parameterType='integer' resultType='com.ttm.crm.server.entity.History'>
+    	SELECT history.*, app_user.first_name || ' ' || app_user.last_name AS user_name
+    		FROM history
+        	LEFT JOIN app_user ON app_user.id = history.user_id
+        	WHERE history.account_id = #{accountId}
+        	ORDER BY history.timestamp DESC
+        	LIMIT 1
+    </select>
+
+    <select id='selectHistoryLatestByContactId' parameterType='integer' resultType='com.ttm.crm.server.entity.History'>
+    	SELECT history.*, app_user.first_name || ' ' || app_user.last_name AS user_name
+    		FROM history
+        	LEFT JOIN app_user ON app_user.id = history.user_id
+        	WHERE history.contact_id = #{contactId}
+        	ORDER BY history.timestamp DESC
+        	LIMIT 1
+    </select>
+    
+    <select id='selectHistoryFirstAddByContactId' parameterType='integer' resultType='com.ttm.crm.server.entity.History'>
+    	SELECT history.*, app_user.first_name || ' ' || app_user.last_name AS user_name
+    		FROM history
+        	LEFT JOIN app_user ON app_user.id = history.user_id
+        	WHERE history.contact_id = #{contactId}
+        	  AND history.action = 'ADD'
+        	  AND history.table_name = 'Contact'
+        	ORDER BY history.timestamp DESC
+        	LIMIT 1
+    </select>
+
+    <insert id='insertHistory' parameterType='com.ttm.crm.server.entity.History'>
+        INSERT INTO history
+        	(account_id,
+			 action,
+			 contact_id,
+			 field_name,
+			 new_value,
+			 old_value,
+			 record_id,
+			 table_name,
+			 timestamp,
+			 user_id)	
+        VALUES
+            (#{accountId},
+			 #{action},
+			 #{contactId},
+			 #{fieldName},
+			 #{newValue},
+			 #{oldValue},
+			 #{recordId},
+			 #{tableName},
+			 #{timeStamp},
+			 #{userId})
+    </insert>
+    
+    
+</mapper>

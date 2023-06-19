@@ -1,0 +1,81 @@
+<mat-toolbar class="sub-toolbar">
+    <mat-toolbar-row>
+        <span class="toolbar-header"></span>
+        <span class="flex-expand"></span>
+        <span flex></span>
+        <button class="button-spacer" mat-raised-button color="primary" routerLink="new">
+            Create Deal
+        </button>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-card class="content-card">
+
+    <form class="filter-form" [formGroup]="filterForm" #ngForm="ngForm" (submit)="applyFilter()">
+        <div>
+            <mat-form-field appearance="outline" class="mat-filter-field-input">
+                <mat-label>Assigned To</mat-label>
+                <mat-select formControlName="filterAssignedTo">
+                    <mat-option *ngFor="let assignedToFilter of assignedToFilters" [value]="assignedToFilter.name">
+                        {{ assignedToFilter.value }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-checkbox class="checkbox-space" formControlName="filterShowCompleted" color="primary">Show Completed</mat-checkbox>
+            <button class="button-space" mat-raised-button color="accent">Submit</button>
+            <button class="button-space" mat-raised-button color="accent" type="button" (click)="resetFilterForm()">Clear</button>
+        </div>
+    </form>
+
+    <div class="container" *ngIf="isLoading">
+        <app-loading-spinner></app-loading-spinner>
+    </div>
+    
+    <table mat-table [dataSource]="dataSource" class="list-table list-table-with-filters" *ngIf="!isLoading">
+
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let deal">
+                <a class="link-style" routerLink="{{deal.id}}">
+                    {{ deal.name }}
+                </a>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="accountName">
+            <th mat-header-cell *matHeaderCellDef>Account</th>
+            <td mat-cell *matCellDef="let deal">
+                {{ deal.accountName }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="dueDate">
+            <th mat-header-cell *matHeaderCellDef>Due Date</th>
+            <td mat-cell *matCellDef="let deal">
+                {{ deal.dueDate | dateUTCPipe }}
+            </td>
+        </ng-container>
+    
+        <!-- don't show AMOUNT for now. it should probably come from server-side but make sure
+             this fits into DD's wish to make the header/detail add atomic (right now it's not and 
+             revamping this will probably lead to different logic for calculating the totals inside
+             the detail component, and maybe that will affect how we do it here - eg maybe pre-store it
+             in the deal record in SQL, OR calc is SS, OR continue to calc it CS?)
+        <ng-container matColumnDef="amount">
+            <th mat-header-cell *matHeaderCellDef>Value</th>
+            <td mat-cell *matCellDef="let deal">
+                {{ deal.amount | currency }}
+            </td>
+        </ng-container>-->
+
+        <ng-container matColumnDef="stage">
+            <th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let deal"> {{ getEnumValueByEnumKey(this.dealStages, deal.stage) }} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        
+    </table>
+
+</mat-card>

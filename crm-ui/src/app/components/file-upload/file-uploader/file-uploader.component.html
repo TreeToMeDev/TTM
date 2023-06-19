@@ -1,0 +1,198 @@
+
+<mat-toolbar>
+    <mat-toolbar-row>
+        <span class="toolbar-header">CSV Import Utility</span>
+        <span class="flex-expand"></span>
+        <span flex></span>
+        <button mat-raised-button color="primary"
+                (click)="formReset()">
+                Reset Form
+        </button>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-card class="content-card">
+    <table class="form-table">
+        <tr>
+            <td class="td-center">
+                <mat-form-field appearance="outline" class="mat-form-field-input">
+                    <mat-label>What are you importing?</mat-label>
+                    <mat-select [(ngModel)]="selectedFileType">
+                        <!-- TODO understand what both value properties actually do -->
+                        <mat-option *ngFor="let type of uploadEntityTypes" [value]="type.value">
+                            {{ type.value }}
+                        </mat-option>  
+                    </mat-select>
+                </mat-form-field>
+            </td>
+        </tr>
+        <tr>
+            <td class="td-center">
+                <div class="file-upload-container">
+                    <div *ngIf="!file" appDnd>
+                        <input type="file" #fileDropRef id="fileDropRef" 
+                            (change)="fileBrowseHandler($event)" accept=""/>
+                        <img style="width: 2em" src="assets/images/upload_file.svg" alt="NOT WORKING">
+                        <h3>Drag and drop file here</h3>
+                        <h3>or</h3>
+                        <div class="browse-label">
+                            <label for="fileDropRef">Browse for file</label>
+                        </div>
+                    </div>
+                    <div *ngIf="file">
+                        <h1>File Uploaded</h1>
+                        <h2>{{file.name}}</h2>
+                        <h3>{{ formatBytes(file.size) }}</h3>
+                        <button mat-raised-button color="primary"
+                            (click)="deleteFile()">
+                            Delete File
+                        </button>
+                    </div>
+                </div>
+            </td>
+        </tr>
+
+        <!-- Show file details once file has been loaded 
+             Hopefully fileInfo comes back, but if not, then an error
+             should be returned --> 
+        <tr>
+            <td>
+                <div *ngIf="isUploading">
+                    <app-loading-spinner></app-loading-spinner>
+                </div>
+                <div *ngIf="!isUploading && fileUploaded">
+                    <h3>File Upload Details</h3>
+
+                    <!--  These errors are if the entire file cannot be loaded 
+                        Maybe it is not a CSV or the file is empty  -->
+                    <div *ngIf="errors.length > 0">
+                        <table class="file-detail-table">
+                            <tr>
+                                <td><span class="file-error">ERROR</span></td>
+                                <td>
+                                    <span class="file-error-detail" *ngFor="let error of errors">
+                                        {{ error }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!--  We don;t have any file errors so the file is uploadable -->
+                    <div *ngIf="errors.length == 0">
+                        <table class="file-detail-table">
+                            <tr>
+                                <td><span>UPLOADED</span></td>
+                                <td><span>File uploaded successfully.  Details below.</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <hr>
+                    <div *ngIf="fileUpload && fileUpload.status == csvFileStatus.UPLOADED">
+                        <table class="file-detail-table">
+                            <tr>
+                                <td>Total Rows</td>
+                                <td>{{ fileDetails.rows }}</td>
+                            </tr>
+                            <tr>
+                                <td>Total Loadable Rows</td>
+                                <td>{{ fileDetails.loadableRows }}</td>
+                            </tr>
+                            <tr>
+                                <td>Total Columns</td>
+                                <td>{{ fileDetails.columns }}</td>
+                            </tr>
+                            <tr>
+                                <td>Total Loadable Columns</td>
+                                <td>{{ fileDetails.matchedColumnHeaders.length }}</td>
+                            </tr>
+                            <tr>
+                                <td>Loadable Columns</td>
+                                <td>
+                                    <div style="display: flex; flex-wrap:wrap; column-gap: 1vh;">
+                                        <div *ngFor="let column of fileDetails.matchedColumnHeaders">
+                                            <span style="background-color: rgba(27, 135, 95, 0.5);
+                                            border-radius: 2vh;
+                                            padding: 10px; display: inline-block;">{{ column }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Omitted File Columns</td>
+                                <td>
+                                    <div style="display: flex; justify-content:left; flex-wrap:wrap; column-gap: 1vh;">
+                                        <div *ngFor="let column of fileDetails.unmatchedCSVHeaders">
+                                            <span style="background-color: rgba(191, 0, 0, 0.5);
+                                            border-radius: 2vh;
+                                            padding: 10px; display: inline-block;">{{ column }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Missing Columns</td>
+                                <td>
+                                    <div style="display: flex; justify-content:left; flex-wrap:wrap; column-gap: 1vh;">
+                                        <div *ngFor="let column of fileDetails.unmatchedObjectHeaders">
+                                            <span style="background-color: rgba(190, 190, 190, 0.5);
+                                            border-radius: 2vh;
+                                            padding: 10px; display: inline-block;">{{ column }}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!--  Some rows may have problems.  Report these as they will not
+                            be loaded.  -->
+                        <h3>File Row Errors</h3>
+                        <div *ngIf="fileDetails.rows != fileDetails.loadableRows">
+                            <table class="file-detail-table">
+                                <div *ngFor="let fileRow of fileDetails.records">
+                                    <tr *ngIf="fileRow.errors.length > 0">
+                                        <td>Row: {{ fileRow.rowNum }}</td>
+                                        <td>
+                                            <span *ngFor="let error of fileRow.errors">
+                                                {{ error }}<br>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </div>
+                            </table>
+                        </div>
+                        <div *ngIf="fileDetails.rows == fileDetails.loadableRows">
+                            <table class="file-detail-table">
+                                <tr>
+                                    <td></td>
+                                    <td><h2>No Errors</h2></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <br>
+                        <button *ngIf="!filePosted" class="post-button" mat-raised-button color="primary"
+                                (click)="postFile()">
+                            Post File
+                        </button>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div *ngIf="isPosting">
+                    <app-loading-spinner></app-loading-spinner>
+                </div>
+                <div *ngIf="!isPosting && filePosted">
+                    <h3 class="h3-zero-top-margin">Posting Results</h3>
+                    <table class="file-detail-table">
+                        <tr>
+                            <td>Total Posted Rows</td>
+                            <td>{{ postCount }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
+</mat-card>

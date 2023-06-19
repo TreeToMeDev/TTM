@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.6.7</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.ttm</groupId>
+	<artifactId>crm</artifactId>
+	<version>1.0.0</version>
+	<name>crm</name>
+	<description>TTM CRM</description>
+	<packaging>pom</packaging>
+	
+	<!-- The two modules in the project -->
+	<modules>
+		<module>crm-ui</module>
+    	<module>crm-server</module>
+	</modules>
+	
+	<build>
+		<pluginManagement>
+			<plugins>
+				
+				<!-- Grab the jar for the Angular UI, unpack it, and put it in the
+					 crm-server/target/classes/static directory.  This is where the Angular
+					 files will be deployed and served from -->
+		        <plugin> 
+		        	<groupId>org.apache.maven.plugins</groupId> 
+		            <artifactId>maven-dependency-plugin</artifactId> 
+		            <executions> 
+		            	<execution> 
+		                	<id>merge</id> 
+		                    <phase>initialize</phase> 
+		                    <goals> 
+		                    	<goal>unpack</goal> 
+		                    </goals> 
+		                    <configuration> 
+		                    	<artifactItems> 
+		                        	<artifactItem> 
+		                            	<groupId>com.ttm</groupId> 
+		                                <artifactId>crm-ui</artifactId> 
+		                                <type>jar</type> 
+		                                <overWrite>true</overWrite> 
+		                                <outputDirectory>${project.build.directory}/classes/static</outputDirectory> 
+		                            </artifactItem> 
+		                        </artifactItems> 
+		                    </configuration> 
+		                </execution> 
+		            </executions> 
+		        </plugin>
+		        <plugin> 
+		            <groupId>com.github.eirslett</groupId> 
+		            <artifactId>frontend-maven-plugin</artifactId> 
+		            <version>1.11.2</version> 
+		 			<configuration>
+	                    <nodeVersion>v14.16.0</nodeVersion>
+	                    <workingDirectory>.</workingDirectory>
+	                    <installDirectory>target</installDirectory>
+	                </configuration>
+		            <executions> 
+		              <!-- Install node and npm --> 
+		              <execution> 
+		                  <id>Install Node and NPM</id> 
+		                <goals> 
+		                    <goal>install-node-and-npm</goal> 
+		                </goals> 
+		                <configuration>
+		                	<nodeVersion>v14.16.0</nodeVersion> 
+		                </configuration> 
+		              </execution> 
+		 
+		              <!-- clean install --> 
+		              <execution> 
+		                 <id>npm install</id> 
+		                 <goals> 
+		                     <goal>npm</goal> 
+		                 </goals> 
+		              </execution> 
+		 
+		              <!-- build app --> 
+		              <execution> 
+		                  <id>npm run build</id> 
+		                  <goals> 
+		                      <goal>npm</goal> 
+		                  </goals> 
+		                  <configuration> 
+		                      <arguments>run build --prod</arguments> 
+		                  </configuration> 
+		              </execution> 
+		            </executions> 
+				</plugin> 
+			</plugins>
+		</pluginManagement>
+	</build>
+	
+	<!-- Tomcat is included in dev but when we package we don't need to include it -->
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-tomcat</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+	</dependencies>
+  	
+  	<profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <activatedProperties>dev</activatedProperties>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <activatedProperties>prod</activatedProperties>
+            </properties>
+        </profile>
+    </profiles>
+      
+</project>

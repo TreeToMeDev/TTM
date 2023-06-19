@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='com.ttm.crm.server'>
+	
+	<select id='selectOAuthTokenByUser' parameterType='long' resultType='com.ttm.crm.server.entity.OAuthToken'>
+    	SELECT * FROM oauth_token WHERE user_id = #{userId}
+    </select>
+    
+    <insert id="insertOAuthToken" parameterType="com.ttm.crm.server.entity.OAuthToken">
+    	INSERT INTO oauth_token
+    		(access_token,
+    		 expires_in,
+    		 refresh_token,
+    		 time_acquired,
+    		 user_id,
+    		 vendor)
+		VALUES
+			(#{accessToken},
+			 #{expiresIn},
+			 #{refreshToken},
+			 #{timeAcquired},
+			 #{userId},
+			 #{vendor})
+    </insert>
+
+    <update id="updateOAuthToken" parameterType="com.ttm.crm.server.entity.OAuthToken">
+    	UPDATE oauth_token SET
+    		access_token = #{accessToken}, 
+    		expires_in = #{expiresIn},
+    		refresh_token = #{refreshToken},
+    		time_acquired = #{timeAcquired},
+    		user_id = #{userId},
+    		vendor = #{vendor}
+		WHERE id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,128 @@
+<form class="edit-form" #ngForm="ngForm" (ngSubmit)="onSubmit()" [formGroup]="form">
+
+    <mat-toolbar>
+        <mat-toolbar-row>
+            <!-- don't leave an empty hyphen in New mode -->
+            <!-- TODO probably a nicer way to do this -->
+            <span class="header">{{ editMode ? "Edit " : "New " }} Product {{ editMode ? " - " : "" }} {{ editMode && form ? form.get('productCode').value : ""}} {{ editMode && form ? form.get('description').value : ""}}</span>
+            <span class="flex-expand"></span>
+            <span flex></span>
+            <!-- DD's version used ngSubmit() on the form, but it's not clear to me how this was linked to the button click,
+                and I can't be 100% certain that it actually worked, so to make it work, do it this way, which works but may not be best.
+                TODO research how ngSubmit works and see if it's better. -->
+            <button class="right-space" mat-raised-button color="primary">
+                Save Product   
+            </button>
+            <button type="button" mat-raised-button color="primary" (click)="onCancel()">
+                Cancel    
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+        
+    <!-- copied from contact-detail, TODO, normalize these -->
+
+    <!-- TODO add back formLoaded and standardize across all forms -->
+
+    <!-- TODO make this a component -->
+    <mat-card class="form-card" *ngIf="serverError">
+        <div class="server-error">
+            {{ serverError }}
+        </div>
+    </mat-card>
+
+    <mat-card class="form-card">
+
+        <div class="sub-title">
+            Product Information
+        </div>
+        
+        <table>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Product Code</mat-label>
+                        <input matInput formControlName="productCode">
+                        <mat-error *ngIf="form.get('productCode').errors"> {{ form.get('productCode').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Description</mat-label>
+                        <input matInput formControlName="description">
+                        <mat-error *ngIf="form.get('description').errors?.['required']">
+                            Please enter a Description.
+                        </mat-error>
+                        <mat-error *ngIf="form.get('description').errors"> {{ form.get('description').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+            </tr>
+            
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Quantity On Hand</mat-label>
+                        <input matInput formControlName="quantityOnHand">
+                        <mat-error *ngIf="form.get('quantityOnHand').errors?.['required']">
+                            Please enter a Quantity.
+                        </mat-error>
+                        <mat-error *ngIf="form.get('quantityOnHand').errors"> {{ form.get('quantityOnHand').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Price</mat-label>
+                        <input matInput formControlName="price" [appInputNumber]="numberPattern.TwoDecimals">
+                        <mat-error *ngIf="form.get('price').errors"> {{ form.get('price').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Measurement Type</mat-label>
+                        <mat-select formControlName="measurement">
+                            <mat-option *ngFor="let measurement of measurementList" [value]="measurement.configOption">
+                               {{ measurement.description }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="form.get('measurement').errors?.['required']">
+                            Please select a measurement.
+                        </mat-error>
+                        <mat-error *ngIf="form.get('measurement').errors"> {{ form.get('measurement').errors['text'] }} </mat-error>
+                    
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Measurement Amount</mat-label>
+                        <input matInput formControlName="measurementAmount" [appInputNumber]="numberPattern.TwoDecimals">
+                        <mat-error *ngIf="form.get('measurementAmount').errors"> {{ form.get('measurementAmount').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Date Available for Sale</mat-label>
+                        <input matInput [matDatepicker]="picker" formControlName="availableDate">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                </td>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Warranty Duration</mat-label>
+                        <mat-select formControlName="warrantyDuration">
+                            <mat-option *ngFor="let warranty of productWarranties" [value]="warranty.name">
+                               {{ warranty.value }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </td>
+            </tr>
+            
+        </table>
+
+    </mat-card>
+
+</form>

@@ -1,0 +1,37 @@
+<div class="container" *ngIf="!form">
+    <app-loading-spinner></app-loading-spinner>
+</div>
+
+<form class="standard-form" #ngForm="ngForm" (ngSubmit)="onSubmit()" [formGroup]="form" *ngIf="form">
+    <mat-toolbar>
+        <mat-toolbar-row>
+            <span class="header">{{ newMode ? "New" : "View" }} Note</span>
+            <span class="flex-expand"></span>
+            <span flex></span>
+            <button *ngIf="newMode" class="right-space" mat-raised-button color="primary">
+                Save Note
+            </button>
+            <button type="button" mat-raised-button color="primary" (click)="onCancel()">
+                {{ newMode ? "Cancel" : "Close" }}    
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+    <mat-card class="form-card" *ngIf="serverError">
+        <div class="server-error">
+            {{ serverError }}
+        </div>
+    </mat-card>
+    <mat-card class="form-card">
+        <table>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input">
+                        <mat-label>Note</mat-label>
+                        <textarea class="big-text-area" matInput formControlName="text" [readonly]="!newMode"></textarea>
+                        <mat-error *ngIf="form.get('text').errors"> {{ form.get('text').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+            </tr>
+         </table>
+    </mat-card>
+</form>

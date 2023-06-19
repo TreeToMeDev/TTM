@@ -1,0 +1,44 @@
+<mat-toolbar>
+    <mat-toolbar-row>
+        <!-- TODO the ternary is a weird way to avoid a null, look into this -->
+        <span class="toolbar-header">{{user ? user.firstName : ""}} {{user ? user.lastName : ""}}</span>
+        <span class="flex-expand"></span>
+        <span flex></span>
+        <button class="right-space" mat-raised-button color="primary" routerLink="edit">
+            Edit User
+        </button>
+        <button mat-raised-button color="warn" (click)="openDialog('0ms', '0ms')">
+            Delete
+        </button>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<form *ngIf="user">
+
+    <mat-card class="form-card">
+
+        <div class="sub-title">
+            User Information
+        </div>
+
+        <table class="detail-table">
+            <tr>
+                <td>First Name</td>
+                <td>{{ user.firstName }}</td>
+                <td>Last Name</td>
+                <td>{{ user.lastName }}</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>{{ user.email }}</td>
+                <td>Users</td>
+                <td>
+                    <mat-checkbox color="primary"
+                                  [checked]="user.accessUsers"
+                                  (click)="$event.preventDefault()">
+                    </mat-checkbox>
+            </tr>
+        </table>
+    </mat-card>
+
+</form>

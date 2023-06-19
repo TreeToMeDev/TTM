@@ -1,0 +1,58 @@
+<div class="container" *ngIf="isLoading">
+    <app-loading-spinner></app-loading-spinner>
+</div>
+<mat-card class="dashboard-card" *ngIf="!isLoading">
+    <mat-card-header>
+        <mat-card-title>
+            {{ 'New Leads' }}
+            <!-- <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
+                <mat-icon>more_vert</mat-icon>
+            </button> -->
+            <mat-menu #menu="matMenu" xPosition="before">
+                <button mat-menu-item>Expand</button>
+                <button mat-menu-item>Remove</button>
+            </mat-menu>
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="dashboard-card-content">
+        <table mat-table [dataSource]="dataSource" class="list-table">
+
+            <ng-container matColumnDef="firstName">
+                <th mat-header-cell *matHeaderCellDef>Name</th>
+                <td mat-cell *matCellDef="let contact">
+                    <a class="link-style" [routerLink]="['/contacts/', contact.id ]">
+                        {{contact.firstName}} {{contact.lastName}} 
+                    </a>
+                </td>
+            </ng-container>
+        
+            <ng-container matColumnDef="accountName">
+                <th mat-header-cell *matHeaderCellDef>Account</th>
+                <td mat-cell class="duration-cell" *matCellDef="let contact">
+                    <a class="link-style" [routerLink]="['/accounts/', contact.accountId ]">
+                        {{contact.accountName}}
+                    </a>
+                </td>
+            </ng-container>
+            
+            <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef>Email</th>
+                <!-- TODO what TF do these classes do here ??? -->
+                <td mat-cell class="description-cell" *matCellDef="let contact">
+                    <a [href]="'mailto:' + contact.email">{{ contact.email }}</a>
+                </td>
+            </ng-container>
+        
+            <ng-container matColumnDef="phone">
+                <th mat-header-cell *matHeaderCellDef>Phone</th>
+                <td mat-cell class="duration-cell" *matCellDef="let contact">
+                    {{contact.phone}}
+                </td>
+            </ng-container>
+        
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        
+        </table>
+    </mat-card-content>
+ </mat-card>

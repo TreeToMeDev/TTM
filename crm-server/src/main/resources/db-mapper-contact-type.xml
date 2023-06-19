@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='com.ttm.crm.server'>
+
+    <select id='selectContactType' parameterType='java.util.Map' resultType='com.ttm.crm.server.entity.ContactType'>
+    	SELECT * 
+    		FROM contact_type
+    		WHERE contact_id = #{contact_id,javaType=integer}
+    		  AND contact_type_key = #{contact_type_key}
+    </select>
+
+	<select id='selectContactTypesByContact' parameterType='integer' resultType='com.ttm.crm.server.entity.ContactType'>
+    	SELECT *
+    		FROM contact_type
+    		WHERE contact_id = #{contactId}
+    		ORDER BY contact_type_key
+    </select>
+    
+    <insert id='insertContactType' parameterType='com.ttm.crm.server.entity.ContactType'>    
+    	INSERT INTO contact_type(
+    		contact_id,
+    		contact_type_key
+  		) VALUES (
+  			#{contactId},
+  			#{contactTypeKey}
+  		)
+    </insert>
+
+    <select id='deleteContactType' parameterType='java.util.Map'>
+    	DELETE FROM contact_type
+    		WHERE contact_id = #{contactId,javaType=integer}
+    		  AND contact_type_key = #{contactTypeKey}
+    </select> 
+
+</mapper>

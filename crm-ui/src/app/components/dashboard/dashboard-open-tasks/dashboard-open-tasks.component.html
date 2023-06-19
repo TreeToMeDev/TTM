@@ -1,0 +1,48 @@
+<div class="container" *ngIf="isLoading">
+    <app-loading-spinner></app-loading-spinner>
+</div>
+<mat-card class="dashboard-card" *ngIf="!isLoading">
+    <mat-card-header>
+        <mat-card-title>
+            {{ 'Tasks Due in Next 7 Days or Older' }}
+            <!-- <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
+                <mat-icon>more_vert</mat-icon>
+            </button> -->
+            <mat-menu #menu="matMenu" xPosition="before">
+                <button mat-menu-item>Expand</button>
+                <button mat-menu-item>Remove</button>
+            </mat-menu>
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="dashboard-card-content">
+        <table mat-table [dataSource]="dataSource" class="list-table">
+
+            <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef>Description</th>
+                <td mat-cell *matCellDef="let task">
+                    <a class="link-style" [routerLink]="['/tasks/', task.id ]">
+                        {{ task.description }}
+                    </a>
+                </td>
+            </ng-container>
+        
+            <ng-container matColumnDef="contactName">
+                <th mat-header-cell *matHeaderCellDef>Contact Name</th>
+                <td mat-cell class="duration-cell" *matCellDef="let task">
+                    <a class="link-style" [routerLink]="['/contacts/', task.contactId ]">
+                        {{ task.contactName }}
+                    </a>
+                </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="dueDate">
+                <th mat-header-cell *matHeaderCellDef>Due Date</th>
+                <td mat-cell *matCellDef="let task"><span [ngClass]="{'overdue-text': checkDate(task.status, task.dueDate)}">{{ task.dueDate | dateUTCPipe }}</span></td>
+            </ng-container>
+        
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        
+        </table>
+    </mat-card-content>
+ </mat-card>

@@ -1,0 +1,83 @@
+<mat-toolbar *ngIf="referral">
+    <mat-toolbar-row>
+        <!-- TODO the ternary is a weird way to avoid a null, look into this -->
+        <span class="toolbar-header">{{referral ? referral.firstName : ""}} {{referral ? referral.lastName : ""}}</span>
+        <span class="flex-expand"></span>
+        <span flex></span>
+        <button *ngIf="referral.contactId == 0" class="right-space" mat-raised-button color="accent" routerLink="convert">
+            Convert to Contact   
+        </button>
+        <button *ngIf="referral.contactId == 0" mat-raised-button color="warn" (click)="openDialog('0ms', '0ms')">
+            Delete    
+        </button>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<form class="standard-form" *ngIf="referral">
+
+    <mat-card class="form-card">
+
+        <div class="sub-title">
+            Referral Information
+        </div>
+
+        <table class="detail-table">
+            <tr>
+                <td>First Name</td>
+                <td>{{ referral.firstName }}</td>
+                <td>Last Name</td>
+                <td>{{ referral.lastName }}</td>
+            </tr>
+            <tr>
+                <td>Company Name</td>
+                <td>{{ referral.companyName }}</td>
+                <td>Job Title</td>
+                <td>{{ referral.jobTitle }}</td>
+            </tr>
+            <tr>
+                <td>Email Address</td>
+                <td>
+                    <a [href]="'mailto:' + referral.email">{{ referral.email }}</a>
+                </td>
+                <td>Phone</td>
+                <td>{{ referral.phone }}</td>
+            </tr>
+        </table>
+
+        <div class="sub-sub-title">
+            Referrer Details
+        </div>
+
+        <table class="detail-table">
+            <tr>
+                <td>First Name</td>
+                <td>{{ referral.referrerFirstName }}</td>
+                <td>Last Name</td>
+                <td>{{ referral.referrerLastName }}</td>
+            </tr>
+            <tr>
+                <td>Email Address</td>
+                <td>
+                    <a [href]="'mailto:' + referral.referrerEmail">{{ referral.referrerEmail }}</a>
+                </td>
+                <td>Phone</td>
+                <td>{{ referral.referrerPhone }}</td>
+            </tr>
+            <tr>
+                <td>Additional Notes</td>
+                <td colspan="3">{{ referral.notes }}</td>
+            </tr>
+            <tr>
+                <td>Consent to Contact Referral?</td>
+                <td>
+                    <mat-checkbox color="primary" labelPosition="after" disabled [checked]="referral.consentToContact"></mat-checkbox>
+                </td>
+                <td>Submission Time</td>
+                <td>{{ referral.submitTimestamp | dateTimeLocalPipe }}</td>
+            </tr>
+        </table>
+    </mat-card>
+
+    <app-note-sub-list *ngIf="referral.contactId == 0" [referralId]="referral.id"></app-note-sub-list>
+
+</form>

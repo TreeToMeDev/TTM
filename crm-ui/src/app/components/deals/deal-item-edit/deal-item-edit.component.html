@@ -1,0 +1,87 @@
+<div class="container" *ngIf="!form">
+    <app-loading-spinner></app-loading-spinner>
+</div>
+<form class="standard-form" #ngForm="ngForm" (ngSubmit)="onSubmit()" [formGroup]="form" *ngIf="form">
+
+    <mat-toolbar>
+        <mat-toolbar-row>
+            <!-- don't leave an empty hyphen in New mode -->
+            <!-- TODO probably a nicer way to do this -->
+            <span class="header">{{ editMode ? "Edit " : "New " }} Line Item</span>
+            <span class="flex-expand"></span>
+            <span flex></span>
+            <!-- DD's version used ngSubmit() on the form, but it's not clear to me how this was linked to the button click,
+                and I can't be 100% certain that it actually worked, so to make it work, do it this way, which works but may not be best.
+                TODO research how ngSubmit works and see if it's better. -->
+            <!-- IMPORTANT first button defined gets the event when they hit Enter in any field -->
+            <button class="right-space" mat-raised-button color="primary">
+                Save Line Item
+            </button>
+            <button type="button" mat-raised-button color="primary" (click)="onCancel()">
+                Cancel    
+            </button>
+        </mat-toolbar-row>
+    </mat-toolbar>
+        
+    <!-- copied from contact-detail, TODO, normalize these -->
+
+    <!-- TODO add back formLoaded and standardize across all forms -->
+
+    <!-- TODO make this a component -->
+    <mat-card class="form-card" *ngIf="serverError">
+        <div class="server-error">
+            {{ serverError }}
+        </div>
+    </mat-card>
+
+    <mat-card class="form-card">
+
+        <!-- TODO: other dialogs eg. task-edit have a subtitle here but it's kinda useless, consider removing it everywhere -->
+
+        <table>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input-large">
+                        <mat-label>Quantity</mat-label>
+                        <input matInput formControlName="quantity" [appInputNumber]="numberPattern.NoDecimals">
+                        <mat-error *ngIf="form.get('quantity').errors"> {{ form.get('quantity').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input-large">
+                        <mat-label>Product Code</mat-label>
+                        <mat-select formControlName="productId" (selectionChange)="onProductChange($event)">
+                            <mat-option *ngFor="let product of products" [value]="product.id">
+                            	{{product.description}} - {{ product.measurementDescription }}: {{ product.measurementAmount }} ({{product.productCode}})
+								</mat-option>  
+                        </mat-select>
+                        <mat-error *ngIf="form.get('productId').errors"> {{ form.get('productId').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <mat-form-field appearance="outline" class="mat-form-field-input-large">
+                        <mat-label>Price</mat-label>
+                        <input matInput formControlName="price" [appInputNumber]="numberPattern.TwoDecimals">
+                        <mat-error *ngIf="form.get('price').errors"> {{ form.get('price').errors['text'] }} </mat-error>
+                    </mat-form-field>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <!-- TODO: this should not be in the tabindex, but tabindex-1 does not work.
+                         It should also not be clickable. Perhaps it shouldn't be an <input> at all
+                        but I want it to look consistent with the rest of the form, so ... -->
+                    <mat-form-field appearance="outline" class="mat-form-field-input-large">
+                        <mat-label>Amount</mat-label>
+                        <input matInput formControlName="amount" [readonly]="true">
+                    </mat-form-field>
+                </td>
+            </tr>
+        </table>
+    </mat-card>
+
+</form>

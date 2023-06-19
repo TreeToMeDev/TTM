@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='com.ttm.crm.server'>
+    	    
+    <select id='selectProducts' resultType='com.ttm.crm.server.entity.Product'>
+    	SELECT product.*,
+    		   ac.description AS measurement_description
+    	FROM product
+    	LEFT JOIN app_config ac ON (ac.category = 'PRODUCT.MEASUREMENT' AND ac.config_option = product.measurement)
+    	ORDER BY product_code;
+    </select>
+
+    <select id='selectProduct' parameterType='integer' resultType='com.ttm.crm.server.entity.Product'>
+    	SELECT product.*,
+    		   ac.description AS measurement_description
+    	FROM product 
+    	LEFT JOIN app_config ac ON (ac.category = 'PRODUCT.MEASUREMENT' AND ac.config_option = product.measurement)
+    	WHERE product.id = #{id};
+    </select> 
+    
+	<insert id='insertProduct' parameterType='com.ttm.crm.server.entity.Product'>
+        INSERT INTO product
+        	(product_code, description, measurement, measurement_amount, price, quantity_on_hand, available_date, warranty_duration)
+    	VALUES (
+    		 #{productCode}, #{description}, #{measurement}, #{measurementAmount}, #{price}, #{quantityOnHand}, #{availableDate}, #{warrantyDuration}) 
+    </insert>
+
+    <update id='updateProduct' parameterType='com.ttm.crm.server.entity.Product'>
+        UPDATE product
+        	SET	product_code = #{productCode},
+        	 	description = #{description},
+        	 	measurement = #{measurement},
+        	 	measurement_amount = #{measurementAmount},
+        	 	price = #{price},
+        	 	quantity_on_hand = #{quantityOnHand},
+        	 	available_date = #{availableDate},
+        	 	warranty_duration = #{warrantyDuration} 
+        	 WHERE id = #{id};
+	</update>
+
+    <select id='deleteProduct' parameterType='integer'>
+    	DELETE FROM product WHERE id = #{id};
+    </select> 
+
+</mapper>

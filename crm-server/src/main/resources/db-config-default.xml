@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--  Default db-config.xml file  Use this as a template for creating your own local db-config.xml file 
+	  Your db-config.xml file will not be tracked in git allowing you to specify your own db password -->
+<!DOCTYPE configuration PUBLIC '-//mybatis.org//DTD Config 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-config.dtd'>
+<configuration>
+    <settings>
+        <setting name='mapUnderscoreToCamelCase' value='true'/>
+    </settings>
+    <environments default = 'ruso'>
+        <environment id = 'ruso'>
+            <transactionManager type = 'JDBC'/>
+            <dataSource type = 'UNPOOLED'>
+                <property name = 'driver' value = 'org.postgresql.Driver'/>
+                <property name = 'url' value = 'jdbc:postgresql://localhost:5432/ttmcrm'/>
+                <property name = 'username' value = 'postgres'/>
+                <property name = 'password' value = 'Postgres'/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+    	<mapper resource = 'db-mapper.xml'/>
+        <mapper resource = 'db-mapper-account.xml'/>
+        <mapper resource = 'db-mapper-agent.xml'/>
+        <mapper resource = 'db-mapper-app-config.xml'/>
+        <mapper resource = 'db-mapper-attachment.xml'/>
+        <mapper resource = 'db-mapper-contact.xml'/>
+        <mapper resource = 'db-mapper-contact-type.xml'/>
+        <mapper resource = 'db-mapper-contact-type-list.xml'/>
+        <mapper resource = 'db-mapper-currency.xml'/>
+        <mapper resource = 'db-mapper-dashboard.xml'/>
+        <mapper resource = 'db-mapper-deal.xml'/>
+        <mapper resource = 'db-mapper-deal-item.xml'/>
+        <mapper resource = 'db-mapper-email.xml'/>
+        <mapper resource = 'db-mapper-file-upload.xml'/>
+        <mapper resource = 'db-mapper-history.xml'/>
+        <mapper resource = 'db-mapper-note.xml'/>
+        <mapper resource = 'db-mapper-oauth-info.xml'/>
+        <mapper resource = 'db-mapper-oauth-token.xml'/>
+        <mapper resource = 'db-mapper-product.xml'/>
+        <mapper resource = 'db-mapper-purchase.xml'/>
+        <mapper resource = 'db-mapper-referral.xml'/>
+        <mapper resource = 'db-mapper-task.xml'/>
+        <mapper resource = 'db-mapper-user.xml'/>
+    </mappers>
+</configuration>

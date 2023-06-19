@@ -1,0 +1,15 @@
+<!-- if screen is unusually small (eg. because Chrome Debugger is open), data.error.serverError (and maybe other stuff)
+  will cause scrolling. scrollbar doesn't appear until user initiates a scroll, seems like a bug an NgUI, how do they
+  know that scrolling is available? -->
+<div mat-dialog-content>
+    Oops, something went wrong.<br>
+    If this problem persists, please report it to ddrozda@vivasoftsolutions.com.<br><br>
+    Details:<br>
+    {{ data.method }}
+    {{ data.url }}
+    {{ data.status }}<br><br>
+    {{ data.error.serverError }}
+</div>
+<div mat-dialog-actions>
+  <button (click)='close($event)' mat-button mat-dialog-close>Close</button>
+</div>

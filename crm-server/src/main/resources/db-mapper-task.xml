@@ -1,0 +1,162 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE mapper PUBLIC '-//mybatis.org//DTD Mapper 3.0//EN' 'http://mybatis.org/dtd/mybatis-3-mapper.dtd'>
+<mapper namespace='com.ttm.crm.server'>
+
+	<select id='selectTasks' parameterType="integer" resultType='com.ttm.crm.server.entity.Task'>
+    	SELECT task.*, 
+    		account.name AS account_name, 
+    		contact.first_name || ' ' || contact.last_name AS contact_name,
+    		app_user.first_name || ' ' || app_user.last_name AS agent__name
+    		FROM task
+    		LEFT JOIN account ON account.id = task.account_id
+    		LEFT JOIN app_user ON app_user.id = task.agent_id
+    		LEFT JOIN contact ON contact.id = task.contact_id
+    		WHERE task.agent_id IN (SELECT get_accessible_ids(#{agentId}))
+    		ORDER BY 
+    			(CASE task.status
+    				WHEN 'NEW' THEN 1
+    				WHEN 'COMPLETE' THEN 2
+    			 END), 
+    			task.due_date
+    </select>
+    
+    <select id='selectOpenTasks' parameterType="integer" resultType='com.ttm.crm.server.entity.Task'>
+    	SELECT task.*, 
+    		account.name AS account_name, 
+    		contact.first_name || ' ' || contact.last_name AS contact_name,
+    		app_user.first_name || ' ' || app_user.last_name AS agent__name
+    		FROM task
+    		LEFT JOIN account ON account.id = task.account_id
+    		LEFT JOIN app_user ON app_user.id = task.agent_id
+    		LEFT JOIN contact ON contact.id = task.contact_id
+    		WHERE task.agent_id IN (SELECT get_accessible_ids(#{agentId})) 
+    		  AND task.status != 'COMPLETE'
+    		ORDER BY task.due_date
+    </select>
+    
+    <select id='selectAccountTasks' parameterType='integer' resultType='com.ttm.crm.server.entity.Task'>
+    	SELECT task.*, 
+    		account.name AS account_name, 
+    		contact.first_name || ' ' || contact.last_name AS contact_name,
+    		app_user.first_name || ' ' || app_user.last_name AS agent_name
+    		FROM task
+    		LEFT JOIN account ON account.id = task.account_id
+    		LEFT JOIN app_user ON app_user.id = task.agent_id
+    		LEFT JOIN contact ON contact.id = task.contact_id
+    		WHERE task.account_id = #{id}
+    		ORDER BY 
+    			(CASE task.status
+    				WHEN 'NEW' THEN 1
+    				WHEN 'COMPLETE' THEN 2
+    			 END), 
+    			task.due_date
+    </select>
+    
+    <select id='selectAccountOpenTasks' parameterType='integer' resultType='com.ttm.crm.server.entity.Task'>
+    	SELECT task.*, 
+    		account.name AS account_name, 
+    		contact.first_name || ' ' || contact.last_name AS contact_name,
+    		app_user.first_name || ' ' || app_user.last_name AS agent_name
+    		FROM task
+    		LEFT JOIN account ON account.id = task.account_id
+    		LEFT JOIN app_user ON app_user.id = task.agent_id
+    		LEFT JOIN contact ON contact.id = task.contact_id
+    		WHERE task.status != 'COMPLETE'
+    		  AND task.account_id = #{id}
+    		ORDER BY 
+    			(CASE task.status
+    				WHEN 'NEW' THEN 1
+    				WHEN 'COMPLETE' THEN 2
+    			 END), 
+    			task.due_date
+    </select>
+    
+    <select id='selectContactTasks' parameterType='integer' resultType='com.ttm.crm.server.entity.Task'>
+    	SELECT task.*, 
+    		account.name AS account_name, 
+    		contact.first_name || ' ' || contact.last_name AS contact_name,
+    		app_user.first_name || ' ' || app_user.last_name AS agent_name
+    		FROM task
+    		LEFT JOIN account ON account.id = task.account_id
+    		LEFT JOIN app_user ON app_user.id = task.agent_id
+    		LEFT JOIN contact ON contact.id = task.contact_id
+    		WHERE task.contact_id = #{id}
+    		ORDER BY 
+    			(CASE task.status
+    				WHEN 'NEW' THEN 1
+    				WHEN 'COMPLETE' THEN 2
+    			 END), 
+    			task.due_date
+    </select>
+
+    <select id='selectContactOpenTasks' parameterType='integer' resultType='com.ttm.crm.server.entity.Task'>
+    	SELECT task.*, 
+    		account.name AS account_name, 
+    		contact.first_name || ' ' || contact.last_name AS contact_name,
+    		app_user.first_name || ' ' || app_user.last_name AS agent_name
+    		FROM task
+    		LEFT JOIN account ON account.id = task.account_id
+    		LEFT JOIN app_user ON app_user.id = task.agent_id
+    		LEFT JOIN contact ON contact.id = task.contact_id
+    		WHERE task.status != 'COMPLETE'
+    		  AND task.contact_id = #{id}
+    		ORDER BY 
+    			(CASE task.status
+    				WHEN 'NEW' THEN 1
+    				WHEN 'COMPLETE' THEN 2
+    			 END), 
+    			task.due_date
+    </select>
+    
+    <select id='selectTask' parameterType='integer' resultType='com.ttm.crm.server.entity.Task'>
+    	SELECT task.*, 
+    		account.name AS account_name, 
+    		contact.first_name || ' ' || contact.last_name AS contact_name,
+    		app_user.first_name || ' ' || app_user.last_name AS agent_name
+    		FROM task
+    		LEFT JOIN account ON account.id = task.account_id
+    		LEFT JOIN app_user ON app_user.id = task.agent_id
+    		LEFT JOIN contact ON contact.id = task.contact_id
+    		WHERE task.id = #{id}
+    </select>
+    
+    <insert id='insertTask' keyColumn='id' keyProperty='id' parameterType='com.ttm.crm.server.entity.Task' useGeneratedKeys='true'>    
+    	INSERT INTO task(
+    		account_id,
+   			agent_id,
+    		contact_id,
+   			description,
+   			due_date,
+   			notes,
+   			priority,
+   			status
+  		) VALUES (
+  			#{accountId},
+   			#{agentId},
+  			#{contactId},
+   			#{description},
+   			#{dueDate},
+   			#{notes},
+   			#{priority},
+   			#{status}
+   		)
+    </insert>
+
+    <update id='updateTask' parameterType='com.ttm.crm.server.entity.Task'>
+    	UPDATE task SET
+    		account_id = #{accountId},
+    		agent_id = #{agentId},
+    		contact_id = #{contactId},
+   			description = #{description},
+    		due_date = #{dueDate},
+    		notes = #{notes},
+    		priority = #{priority},
+    		status = #{status}
+    		WHERE id = #{id}
+    </update>
+    
+    <select id='deleteTask' parameterType='integer'>
+    	DELETE FROM task WHERE id = #{id};
+    </select> 
+    
+</mapper>

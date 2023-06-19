@@ -1,0 +1,108 @@
+<mat-toolbar>
+    <mat-toolbar-row>
+        <!-- TODO the ternary is a weird way to avoid a null, look into this -->
+        <span class="toolbar-header">{{contact ? contact.firstName : ""}} {{contact ? contact.lastName : ""}}</span>
+        <span class="flex-expand"></span>
+        <span flex></span>
+        <button class="right-space" mat-raised-button color="primary" routerLink="edit">Edit</button>
+        <button class="right-space" routerLink="duplicate" mat-raised-button color="primary">Duplicate</button>
+        <button mat-raised-button color="warn" (click)="openDialog('0ms', '0ms')">
+            Delete    
+        </button>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<form class="standard-form" *ngIf="contact">
+
+    <mat-card class="form-card">
+
+        <div class="sub-title">
+            Contact Information
+        </div>
+
+        <table class="detail-table">
+            <tr>
+                <td>First Name</td>
+                <td>{{ contact.firstName }}</td>
+                <td>Last Name</td>
+                <td>{{ contact.lastName }}</td>
+                <td>Account Name</td>
+                <td>
+                    <a class="link-style" [routerLink]="['/accounts/', contact.accountId ]">
+                        {{contact.accountName}}
+                    </a>
+                </td>
+            </tr>
+            <tr>
+                <td>Title</td>
+                <td>{{ contact.title }}</td>
+                <td>Email Address:</td>
+                <td>
+                    <a [href]="'mailto:' + contact.email">{{ contact.email }}</a>
+                </td>
+                <td>Web Site</td>
+                <td>{{contact.accountWebSite}}</td>
+            </tr>
+            <tr>
+                <td>Contact Type:</td>
+                <td colspan="3">{{ contactTypesList }}</td>
+                <td>Account Phone</td>
+                <td>{{contact.accountPhone}}</td>
+            </tr>
+            <tr>
+                <td>Phone</td>
+                <td>{{ contact.phone }}</td>
+                <td>Cell Phone</td>
+                <td>{{ contact.phoneCell }}</td>
+                <td>Account City</td>
+                <td>{{contact.accountCity}}</td>
+            </tr>
+            <tr>
+                <td>Street</td>
+                <td>{{ contact.street }}</td>
+                <td>City</td>
+                <td>{{ contact.city }}</td>
+                <td>Account Country</td>
+                <td>{{contact.accountCountry}}</td>
+            </tr>
+            <tr>
+                <td>Province/State</td>
+                <td>{{ contact.provinceState }}</td>
+                <td>Country</td>
+                <td>{{ contact.country }}</td>
+                <td>Industry</td>
+                <td>{{ contact.accountIndustry }}</td>
+            </tr>
+            <tr>
+                <td>Postal/Zip Code</td>
+                <td>{{ contact.postalCode }}</td>
+                <td>Agent</td>
+                <td>{{ contact.agentName }}</td>
+            </tr>
+            <tr>
+                <td>Contact Source</td>
+                <td>{{ contact.source | enumMap: contactSources }}</td>
+                <td>Source Details</td>
+                <td [ngSwitch]="contact.source">
+                    <div *ngSwitchCase="'REFERRAL'">
+                        <a *ngIf="contact.referralId > 0" class="link-style" [routerLink]="['/referrals/', contact.referralId ]">
+                            {{ contact.referrerName }}
+                        </a>
+                    </div>
+                    <div *ngSwitchCase="'FILE'">
+                        {{ contact.originalFileName }}
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </mat-card>
+
+    <app-email-sub-list [recipientAddress]="contact.email"></app-email-sub-list>
+    <app-note-sub-list [contactId]="id"></app-note-sub-list>
+    <!-- do NOT pass accountId here as it screws up GET. IMPORTANT, the Tasks will be the Tasks
+         for the Contact but WILL NOT include tasks for the ACCOUNT related to that Contact. -->
+    <app-task-sub-list [contactId]="id"></app-task-sub-list>
+    <app-deal-sub-list [contactId]="id"></app-deal-sub-list>
+    <app-history-sub-list [contactId]=id></app-history-sub-list>
+
+</form>

@@ -1,0 +1,51 @@
+<form class="standard-form" #ngForm="ngForm" [formGroup]="form">
+    <mat-accordion multi [togglePosition]="'before'">
+        <div class="accordion-spacer">
+            <mat-expansion-panel [expanded]="true" class="expansion-panel">
+                <mat-expansion-panel-header class="panel-header">
+                    <mat-panel-title class="panel-title">
+                        Tasks
+                    </mat-panel-title>
+                    <mat-checkbox class="button-space" formControlName="filterShowCompleted" color="primary" 
+                            (change)="toggleCompleted()"
+                            (click)="$event.stopPropagation()">Show Completed
+                    </mat-checkbox>
+                    <button mat-raised-button color="primary" (click)="addView('ADD', $event, -1)">
+                        New Task    
+                    </button>
+                </mat-expansion-panel-header>
+                <div *ngIf="tasks == null || tasks.length == 0" class="no-records">
+                    <i>No records found</i>
+                </div>
+                <div *ngIf="tasks != null && tasks.length > 0">
+                    <div *ngIf="tasks != undefined">
+                        <table mat-table [dataSource]="dataSource" class="list-table">
+                            <ng-container matColumnDef="description">
+                                <th mat-header-cell *matHeaderCellDef>Description</th>
+                                <td mat-cell *matCellDef="let task">
+                                    <a class="link-style" (click)="addView('VIEW', $event, task.id)">
+                                        {{ task.description }}
+                                    </a>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="dueDate">
+                                <th mat-header-cell *matHeaderCellDef>Due Date</th>
+                                <td mat-cell *matCellDef="let task"> {{ task.dueDate | dateUTCPipe }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="status">
+                                <th mat-header-cell *matHeaderCellDef>Status</th>
+                                <td mat-cell *matCellDef="let task"> {{ task.status }} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="priority">
+                                <th mat-header-cell *matHeaderCellDef>Priority</th>
+                                <td mat-cell *matCellDef="let task"> {{ task.priority }} </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                        </table>                    
+                    </div>
+                </div>
+            </mat-expansion-panel>
+        </div>
+    </mat-accordion>
+</form>

@@ -1,0 +1,84 @@
+<mat-toolbar class="sub-toolbar"> 
+    <mat-toolbar-row>
+        <span class="toolbar-header"></span>
+        <span class="flex-expand"></span>
+        <span flex></span>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-card class="content-card">
+
+    <form class="filter-form" [formGroup]="filterForm" #ngForm="ngForm" (submit)="applyFilter()">
+        <div>
+            <mat-form-field appearance="outline" class="mat-filter-field-input">
+                <mat-label>Name contains</mat-label>
+                <input matInput formControlName="filterName">
+            </mat-form-field>
+            <button class="button-space" mat-raised-button color="accent">Submit</button>
+            <button class="button-space" mat-raised-button color="accent" type="button" (click)="resetFilterForm()">Reset</button>
+        </div>
+    </form>
+
+    <hr/>
+
+    <table mat-table [dataSource]="dataSource" class="list-table" matSort #referralTbSort="matSort">
+
+        <ng-container matColumnDef="firstName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+            <td mat-cell *matCellDef="let referral">
+                <a class="link-style" [routerLink]="['/referrals/', referral.id ]">
+                    {{referral.firstName}} {{referral.lastName}} 
+                </a>
+            </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>Email</th>
+            <!-- TODO what TF do these classes do here ??? -->
+            <td mat-cell class="description-cell" *matCellDef="let referral">
+                <a [href]="'mailto:' + referral.email">{{ referral.email }}</a>
+            </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="phone">
+            <th mat-header-cell *matHeaderCellDef>Phone</th>
+            <td mat-cell class="duration-cell" *matCellDef="let referral">
+                {{referral.phone}}
+            </td>
+        </ng-container>
+    
+        <ng-container matColumnDef="companyName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Company</th>
+            <td mat-cell class="duration-cell" *matCellDef="let referral">
+                {{referral.companyName}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="jobTitle">
+            <th mat-header-cell *matHeaderCellDef>Job Title</th>
+            <td mat-cell class="duration-cell" *matCellDef="let referral">
+                {{referral.jobTitle}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="referrerName">
+            <th mat-header-cell *matHeaderCellDef>Referred By</th>
+            <td mat-cell class="duration-cell" *matCellDef="let referral">
+                {{referral.referrerFirstName}} {{referral.referrerLastName}} 
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="submitTimestamp">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Submission Time</th>
+            <td mat-cell class="duration-cell" *matCellDef="let referral">
+                {{referral.submitTimestamp | dateTimeLocalPipe }} 
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    
+    </table>
+
+</mat-card>

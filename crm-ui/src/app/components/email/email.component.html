@@ -1,0 +1,28 @@
+<div *ngIf="!oAuthValid" style="display:block" style="margin-top:5vh">
+    <div style="display:table;margin:auto;margin-top:20vh">
+        <img style="width:20vw" src="assets/images/gmail_logo.png"/>
+        <div style="margin-top:3vh">
+            Prior to using Syker CRM email, you must authorize Syker CRM to access your Gmail account.<br><br>
+            If you don't have a Gmail account, click <a href='https://www.google.com/gmail/about'>here</a> to get one.<br><br>
+            If you already have a Gmail account, click below to continue.<br><br>
+            <button style="margin-top:1vh" mat-raised-button color="primary" style="margin-top:1.5vh" type="submit" (click)="authorize()">Authorize Gmail</button>
+        </div>
+    </div>
+</div>
+<div *ngIf="oAuthValid" style="margin-left:2vw;margin-top:2vh">
+    <form #ngForm="ngForm" [formGroup]="form">
+        <div class="form-field">
+            <mat-form-field appearance="outline" class="mat-form-field-input" style="width:96vw">
+            <mat-label>To</mat-label>
+            <input matInput formControlName="recipient" type="email" placeholder="Enter your email address" required>
+            <mat-error>Please enter a valid email address</mat-error>
+            </mat-form-field>
+        </div>
+        <div class="form-field">
+            <mat-form-field appearance="outline" style="width:80vw" class="mat-form-field-input" style="width:96vw">
+            <textarea matInput formControlName="body" style="resize:none" placeholder="Enter your message" columns="50" style="height:62vh"></textarea>
+            </mat-form-field>
+        </div>
+        <button style="margin-top:1vh" mat-raised-button color="primary" type="submit" (click)="send()">Send</button>
+    </form>
+</div>
